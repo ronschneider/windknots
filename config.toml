@@ -1,0 +1,30 @@
+baseURL = "https://windknots.com/"
+languageCode = "en-us"
+title = "Windknots - Fishing News & Stories"
+theme = "windknots"
+
+[params]
+  description = "Your daily catch of fishing news, tips, and stories from around the web"
+  author = "Windknots"
+  articlesPerPage = 20
+
+[outputs]
+  home = ["HTML", "JSON"]
+  section = ["HTML", "JSON"]
+
+[outputFormats]
+  [outputFormats.JSON]
+    mediaType = "application/json"
+    baseName = "index"
+    isPlainText = true
+
+[taxonomies]
+  tag = "tags"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[pagination]
+  pagerSize = 20

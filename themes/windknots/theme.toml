@@ -1,0 +1,11 @@
+name = "Windknots"
+license = "MIT"
+licenselink = "https://github.com/yourusername/windknots/blob/main/LICENSE"
+description = "A clean, modern theme for fishing content aggregation"
+homepage = "https://windknots.com/"
+tags = ["fishing", "news", "aggregator", "tailwind"]
+features = ["infinite-scroll", "tag-filtering", "responsive"]
+
+[author]
+  name = "Windknots"
+  homepage = "https://windknots.com/"

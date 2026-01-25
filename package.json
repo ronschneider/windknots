@@ -1,0 +1,12 @@
+{
+  "name": "windknots",
+  "version": "1.0.0",
+  "description": "Windknots fishing content aggregator",
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./themes/windknots/static/css/input.css -o ./themes/windknots/static/css/main.css --minify",
+    "watch:css": "npx tailwindcss -i ./themes/windknots/static/css/input.css -o ./themes/windknots/static/css/main.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

@@ -1,0 +1,95 @@
+<div class="tag-filter mb-6">
+    <div class="flex flex-wrap gap-2 items-center">
+        <span class="text-sm text-gray-500 mr-2">Filter:</span>
+
+        <button
+            class="tag-filter-btn active px-3 py-1.5 text-sm font-medium rounded-full bg-ocean-600 text-white transition-colors"
+            data-tag="all"
+        >
+            All
+        </button>
+
+        {{ $tags := slice "freshwater" "saltwater" "fly-fishing" "gear" "techniques" "news" "travel" "conservation" }}
+        {{ range $tags }}
+        <button
+            class="tag-filter-btn px-3 py-1.5 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+            data-tag="{{ . }}"
+        >
+            {{ . | title }}
+        </button>
+        {{ end }}
+    </div>
+</div>
+
+<style>
+    .tag-filter-btn.active {
+        background-color: rgb(8 145 178);
+        color: white;
+    }
+    .tag-filter-btn:not(.active) {
+        background-color: rgb(229 231 235);
+        color: rgb(55 65 81);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.tag-filter-btn');
+    const articlesContainer = document.getElementById('articles-container');
+
+    // Get current tag from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentTag = urlParams.get('tag') || 'all';
+
+    // Set initial active state
+    filterButtons.forEach(btn => {
+        if (btn.dataset.tag === currentTag) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tag = this.dataset.tag;
+
+            // Update URL
+            if (tag === 'all') {
+                window.history.pushState({}, '', window.location.pathname);
+            } else {
+                window.history.pushState({}, '', `?tag=${tag}`);
+            }
+
+            // Update active state
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // Filter articles
+            filterArticles(tag);
+        });
+    });
+
+    function filterArticles(tag) {
+        const articles = articlesContainer.querySelectorAll('.article-card');
+
+        articles.forEach(article => {
+            const articleTags = article.dataset.tags?.split(',') || [];
+
+            if (tag === 'all' || articleTags.includes(tag)) {
+                article.style.display = '';
+            } else {
+                article.style.display = 'none';
+            }
+        });
+
+        // Update container's current tag for infinite scroll
+        articlesContainer.dataset.currentTag = tag;
+    }
+
+    // Apply initial filter
+    if (currentTag !== 'all') {
+        filterArticles(currentTag);
+    }
+});
+</script>

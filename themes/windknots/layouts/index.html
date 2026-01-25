@@ -1,0 +1,86 @@
+{{ define "main" }}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-ocean-600 to-ocean-800 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Windknots</h1>
+        <p class="text-xl text-ocean-100 max-w-2xl mx-auto">
+            Your daily catch of fishing news, tips, and stories from around the web.
+        </p>
+    </div>
+</section>
+
+<!-- Weekly Roundups (if any exist) -->
+{{ $themes := where .Site.RegularPages "Section" "themes" }}
+{{ if $themes }}
+<section class="bg-ocean-50 py-8 mb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-ocean-800">Daily Digest</h2>
+                <p class="text-sm text-gray-500">{{ now.Format "January 2, 2006" }}</p>
+            </div>
+            <a href="/themes/" class="text-ocean-600 hover:underline text-sm">View all &rarr;</a>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {{ range first 3 ($themes.ByDate.Reverse) }}
+            <a href="{{ .Permalink }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                {{ if .Params.image }}
+                <img src="{{ .Params.image }}" alt="{{ .Title }}" class="w-full h-32 object-cover">
+                {{ end }}
+                <div class="p-4">
+                    <div class="text-xs text-gray-500 mb-2">{{ .Date.Format "January 2, 2006" }}</div>
+                    <h3 class="font-semibold text-ocean-700 mb-2">{{ .Title }}</h3>
+                    <p class="text-sm text-gray-600 line-clamp-2">{{ .Params.description }}</p>
+                    <div class="flex flex-wrap gap-1 mt-3">
+                        {{ range first 3 .Params.tags }}
+                        <span class="px-2 py-0.5 bg-ocean-100 text-ocean-700 rounded text-xs">{{ . }}</span>
+                        {{ end }}
+                    </div>
+                </div>
+            </a>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}
+
+<!-- Tag Filter -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    {{ partial "tag-filter.html" . }}
+</div>
+
+<!-- Articles Grid -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-current-tag="">
+        {{ $paginator := .Paginate (where .Site.RegularPages "Section" "articles") }}
+        {{ range $paginator.Pages }}
+            {{ partial "article-card.html" . }}
+        {{ end }}
+    </div>
+
+    {{ if $paginator.HasNext }}
+    <div id="load-more" class="text-center py-8">
+        <div class="inline-flex items-center text-ocean-600">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Loading more articles...</span>
+        </div>
+    </div>
+    {{ end }}
+
+    <div id="no-more" class="text-center py-8 text-gray-500 hidden">
+        You've reached the end. Check back tomorrow for fresh content!
+    </div>
+</div>
+
+<script>
+    window.paginatorData = {
+        currentPage: {{ $paginator.PageNumber }},
+        totalPages: {{ $paginator.TotalPages }},
+        hasNext: {{ $paginator.HasNext }},
+        basePath: "/articles/"
+    };
+</script>
+{{ end }}

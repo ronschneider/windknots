@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+}
+
+/* Custom component styles */
+@layer components {
+    /* Line clamp utilities */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Article card hover effect */
+    .article-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .article-card:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Tag pill styling */
+    .tag-pill {
+        transition: background-color 0.15s ease;
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite;
+    }
+
+    @keyframes skeleton-loading {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+}
+
+/* Custom utility styles */
+@layer utilities {
+    /* Aspect ratio for images */
+    .aspect-video {
+        aspect-ratio: 16 / 9;
+    }
+
+    /* Hide scrollbar but allow scrolling */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Animation for fade in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.article-card {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Stagger animation for article cards */
+.article-card:nth-child(1) { animation-delay: 0.0s; }
+.article-card:nth-child(2) { animation-delay: 0.05s; }
+.article-card:nth-child(3) { animation-delay: 0.1s; }
+.article-card:nth-child(4) { animation-delay: 0.15s; }
+.article-card:nth-child(5) { animation-delay: 0.2s; }
+.article-card:nth-child(6) { animation-delay: 0.25s; }

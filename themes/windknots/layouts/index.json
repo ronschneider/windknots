@@ -1,0 +1,21 @@
+{{- $paginator := .Paginate (where .Site.RegularPages "Section" "articles") -}}
+{
+  "page": {{ $paginator.PageNumber }},
+  "totalPages": {{ $paginator.TotalPages }},
+  "hasNext": {{ $paginator.HasNext }},
+  "articles": [
+    {{- range $index, $page := $paginator.Pages -}}
+    {{- if $index }},{{ end }}
+    {
+      "title": {{ $page.Title | jsonify }},
+      "url": {{ $page.RelPermalink | jsonify }},
+      "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
+      "source_name": {{ $page.Params.source_name | jsonify }},
+      "source_url": {{ $page.Params.source_url | jsonify }},
+      "summary": {{ $page.Params.summary | jsonify }},
+      "image": {{ $page.Params.image | jsonify }},
+      "tags": {{ $page.Params.tags | jsonify }}
+    }
+    {{- end }}
+  ]
+}

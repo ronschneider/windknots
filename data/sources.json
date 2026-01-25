@@ -1,0 +1,56 @@
+{
+  "rss_feeds": [
+    {
+      "name": "Fly Fisherman",
+      "url": "https://www.flyfisherman.com/feed/",
+      "enabled": true
+    },
+    {
+      "name": "Hatch Magazine",
+      "url": "https://www.hatchmag.com/feed/",
+      "enabled": true
+    },
+    {
+      "name": "Midcurrent",
+      "url": "https://midcurrent.com/feed/",
+      "enabled": true
+    },
+    {
+      "name": "Fly Lords",
+      "url": "https://flylordsmag.com/feed/",
+      "enabled": true
+    },
+    {
+      "name": "Orvis News",
+      "url": "https://news.orvis.com/feed/",
+      "enabled": true
+    },
+    {
+      "name": "Gink & Gasoline",
+      "url": "https://www.ginkandgasoline.com/feed/",
+      "enabled": true
+    },
+    {
+      "name": "The Fly Fishing Basics",
+      "url": "https://theflyfishingbasics.com/feed/",
+      "enabled": true
+    }
+  ],
+  "newsapi": {
+    "enabled": true,
+    "query": "fly fishing",
+    "language": "en",
+    "sort_by": "publishedAt",
+    "page_size": 20
+  },
+  "reddit": {
+    "enabled": true,
+    "subreddits": [
+      "flyfishing",
+      "flytying",
+      "troutfishing"
+    ],
+    "sort": "hot",
+    "limit": 15
+  }
+}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="ocean" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9"/>
+      <stop offset="100%" style="stop-color:#0369a1"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#ocean)"/>
+  <!-- Fish silhouette -->
+  <path d="M25 50 Q35 35 55 40 Q70 42 80 50 Q70 58 55 60 Q35 65 25 50 Z" fill="white" opacity="0.9"/>
+  <!-- Fish eye -->
+  <circle cx="65" cy="50" r="4" fill="#0369a1"/>
+  <!-- Fish tail -->
+  <path d="M25 50 L15 40 L15 60 Z" fill="white" opacity="0.9"/>
+  <!-- Wave lines -->
+  <path d="M20 75 Q30 70 40 75 Q50 80 60 75 Q70 70 80 75" stroke="white" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M20 82 Q30 77 40 82 Q50 87 60 82 Q70 77 80 82" stroke="white" stroke-width="2" fill="none" opacity="0.3"/>
+</svg>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en-us" }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ .Site.Params.description | default .Site.Title }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ .Title | default .Site.Title }}">
+    <meta property="og:description" content="{{ .Site.Params.description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ .Permalink }}">
+    {{ with .Params.image }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ .Title | default .Site.Title }}">
+    <meta name="twitter:description" content="{{ .Site.Params.description }}">
+
+    <title>{{ .Title | default .Site.Title }}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+    {{ partial "header.html" . }}
+
+    <main class="flex-grow">
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    <footer class="bg-ocean-900 text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-ocean-200">&copy; {{ now.Year }} Windknots. Aggregated fishing content from around the web.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="/about/" class="text-ocean-200 hover:text-white transition-colors">About</a>
+                    <a href="/tags/" class="text-ocean-200 hover:text-white transition-colors">Tags</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/infinite-scroll.js"></script>
+</body>
+</html>
