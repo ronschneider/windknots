@@ -12,6 +12,7 @@ from .summarizer import summarize_article, clean_description
 from .tagger import auto_tag
 from .image_extractor import process_article_image, create_placeholder_image
 from .theme_extractor import extract_and_save_themes
+from .digest_generator import generate_daily_digest
 
 
 def slugify(text: str) -> str:
@@ -196,10 +197,30 @@ if __name__ == "__main__":
         action="store_true",
         help="Only run theme extraction, skip article fetching"
     )
+    parser.add_argument(
+        "--digest",
+        action="store_true",
+        help="Generate a daily digest (themes + weblinks)"
+    )
+    parser.add_argument(
+        "--digest-date",
+        type=str,
+        help="Date for digest (YYYY-MM-DD, defaults to today)"
+    )
 
     args = parser.parse_args()
 
-    if args.themes_only:
+    if args.digest:
+        from datetime import date
+        target_date = None
+        if args.digest_date:
+            try:
+                target_date = date.fromisoformat(args.digest_date)
+            except ValueError:
+                print(f"Invalid date format: {args.digest_date}. Use YYYY-MM-DD.")
+                exit(1)
+        generate_daily_digest(target_date=target_date)
+    elif args.themes_only:
         print("=" * 60)
         print("Windknots Theme Extraction")
         print("=" * 60)

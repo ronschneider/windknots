@@ -33,10 +33,10 @@ We aggregate content from respected fishing publications including:
 
 - **Freshwater Fishing** - Bass, trout, walleye, and more
 - **Saltwater Fishing** - Offshore, inshore, and surf fishing
-- **Fly Fishing** - Techniques, flies, and destinations
 - **Gear Reviews** - Rods, reels, tackle, and equipment
 - **Fishing News** - Tournaments, records, and regulations
 - **Travel** - Fishing destinations and trip reports
+- **Fly Tying** - Tips, patterns, and demos
 - **Conservation** - Habitat protection and sustainable fishing
 
 ### Disclaimer

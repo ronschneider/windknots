@@ -9,50 +9,56 @@
     </div>
 </section>
 
-<!-- Weekly Roundups (if any exist) -->
-{{ $themes := where .Site.RegularPages "Section" "themes" }}
-{{ if $themes }}
-<section class="bg-ocean-50 py-8 mb-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h2 class="text-2xl font-bold text-ocean-800">Daily Digest</h2>
-                <p class="text-sm text-gray-500">{{ now.Format "January 2, 2006" }}</p>
-            </div>
-            <a href="/themes/" class="text-ocean-600 hover:underline text-sm">View all &rarr;</a>
-        </div>
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {{ range first 3 ($themes.ByDate.Reverse) }}
-            <a href="{{ .Permalink }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                {{ if .Params.image }}
-                <img src="{{ .Params.image }}" alt="{{ .Title }}" class="w-full h-32 object-cover">
-                {{ end }}
-                <div class="p-4">
-                    <div class="text-xs text-gray-500 mb-2">{{ .Date.Format "January 2, 2006" }}</div>
-                    <h3 class="font-semibold text-ocean-700 mb-2">{{ .Title }}</h3>
-                    <p class="text-sm text-gray-600 line-clamp-2">{{ .Params.description }}</p>
-                    <div class="flex flex-wrap gap-1 mt-3">
-                        {{ range first 3 .Params.tags }}
-                        <span class="px-2 py-0.5 bg-ocean-100 text-ocean-700 rounded text-xs">{{ . }}</span>
-                        {{ end }}
-                    </div>
-                </div>
-            </a>
-            {{ end }}
+<!-- Daily Digests Stream -->
+{{ $digests := where .Site.RegularPages "Section" "digests" }}
+{{ if $digests }}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div id="digests-container">
+        {{ $paginator := .Paginate ($digests.ByDate.Reverse) }}
+        {{ range $paginator.Pages }}
+            {{ partial "digest-entry.html" . }}
+        {{ end }}
+    </div>
+
+    {{ if $paginator.HasNext }}
+    <div id="load-more" class="text-center py-8">
+        <div class="inline-flex items-center text-ocean-600">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Loading more digests...</span>
         </div>
     </div>
-</section>
-{{ end }}
+    {{ end }}
 
-<!-- Tag Filter -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    {{ partial "tag-filter.html" . }}
+    <div id="no-more" class="text-center py-8 text-gray-500 hidden">
+        You've reached the beginning. Check back tomorrow for fresh content!
+    </div>
 </div>
 
-<!-- Articles Grid -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-    <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-current-tag="">
-        {{ $paginator := .Paginate (where .Site.RegularPages "Section" "articles") }}
+<script>
+    window.paginatorData = {
+        currentPage: {{ $paginator.PageNumber }},
+        totalPages: {{ $paginator.TotalPages }},
+        hasNext: {{ $paginator.HasNext }},
+        basePath: "/",
+        contentType: "digests"
+    };
+</script>
+{{ else }}
+<!-- Fallback: Show articles if no digests exist yet -->
+{{ $articles := where .Site.RegularPages "Section" "articles" }}
+{{ if $articles }}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-8">
+        <p class="text-gray-600">Daily digests coming soon! In the meantime, browse our latest articles:</p>
+    </div>
+
+    {{ partial "tag-filter.html" . }}
+
+    <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6" data-current-tag="">
+        {{ $paginator := .Paginate $articles }}
         {{ range $paginator.Pages }}
             {{ partial "article-card.html" . }}
         {{ end }}
@@ -80,7 +86,15 @@
         currentPage: {{ $paginator.PageNumber }},
         totalPages: {{ $paginator.TotalPages }},
         hasNext: {{ $paginator.HasNext }},
-        basePath: "/articles/"
+        basePath: "/articles/",
+        contentType: "articles"
     };
 </script>
+{{ else }}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+    <p class="text-gray-600">No content yet. Run the pipeline to generate your first daily digest!</p>
+    <code class="block mt-4 bg-gray-100 p-4 rounded text-sm">python -m pipeline.digest_generator</code>
+</div>
+{{ end }}
+{{ end }}
 {{ end }}

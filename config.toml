@@ -12,6 +12,9 @@ theme = "windknots"
   home = ["HTML", "JSON"]
   section = ["HTML", "JSON"]
 
+[permalinks]
+  digests = "/digests/:filename/"
+
 [outputFormats]
   [outputFormats.JSON]
     mediaType = "application/json"

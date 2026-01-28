@@ -1,5 +1,6 @@
 /**
  * Infinite scroll functionality for Windknots
+ * Supports both article cards and digest entries
  */
 
 (function() {
@@ -11,13 +12,122 @@
     let isLoading = false;
     let hasMore = window.paginatorData?.hasNext || false;
     const basePath = window.paginatorData?.basePath || '/articles/';
+    const contentType = window.paginatorData?.contentType || 'articles';
 
-    // DOM elements
-    const container = document.getElementById('articles-container');
+    // DOM elements - support both container types
+    const container = document.getElementById('digests-container') || document.getElementById('articles-container');
     const loadMoreEl = document.getElementById('load-more');
     const noMoreEl = document.getElementById('no-more');
 
     if (!container) return;
+
+    /**
+     * Escape HTML to prevent XSS
+     */
+    function escapeHtml(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /**
+     * Format date string
+     */
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        });
+    }
+
+    /**
+     * Create a digest entry element from JSON data
+     */
+    function createDigestEntry(digest) {
+        const entry = document.createElement('article');
+        entry.className = 'digest-entry bg-white rounded-xl shadow-sm overflow-hidden mb-8';
+
+        // Build themes HTML
+        let themesHtml = '';
+        if (digest.themes && digest.themes.length > 0) {
+            const themeCards = digest.themes.map(theme => {
+                const tagsHtml = (theme.tags || []).slice(0, 2).map(tag =>
+                    `<span class="px-2 py-0.5 bg-ocean-100 text-ocean-700 rounded text-xs">${escapeHtml(tag)}</span>`
+                ).join('');
+
+                const imageHtml = theme.image
+                    ? `<img src="${escapeHtml(theme.image)}" alt="${escapeHtml(theme.title)}" class="w-full h-32 object-cover">`
+                    : `<div class="w-full h-32 bg-gradient-to-br from-ocean-400 to-ocean-600"></div>`;
+
+                return `
+                    <div class="theme-card bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                        ${imageHtml}
+                        <div class="p-4">
+                            <h4 class="font-semibold text-ocean-800 mb-1 line-clamp-2">${escapeHtml(theme.title)}</h4>
+                            <p class="text-sm text-gray-600 line-clamp-2">${escapeHtml(theme.description)}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="text-xs text-gray-500">${theme.articleCount} articles</span>
+                                ${tagsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            themesHtml = `
+                <div class="mb-8">
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Today's Themes</h3>
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        ${themeCards}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Build weblinks summary HTML
+        let weblinksHtml = '';
+        if (digest.weblinks) {
+            const counts = [];
+            if (digest.weblinks.redditCount > 0) counts.push(`${digest.weblinks.redditCount} discussions`);
+            if (digest.weblinks.dealsCount > 0) counts.push(`${digest.weblinks.dealsCount} deals`);
+            if (digest.weblinks.tripsCount > 0) counts.push(`${digest.weblinks.tripsCount} trips`);
+
+            if (counts.length > 0) {
+                weblinksHtml = `
+                    <div class="text-sm text-gray-500">
+                        From around the web: ${counts.join(', ')}
+                    </div>
+                `;
+            }
+        }
+
+        entry.innerHTML = `
+            <div class="bg-ocean-600 text-white px-6 py-4">
+                <div class="flex items-baseline gap-3">
+                    <span class="text-4xl font-bold">${escapeHtml(digest.day)}</span>
+                    <div>
+                        <div class="text-lg font-medium">${escapeHtml(digest.month)}</div>
+                        <div class="text-ocean-200 text-sm">${escapeHtml(digest.year)}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                ${themesHtml}
+                ${weblinksHtml}
+            </div>
+            <div class="px-6 py-4 bg-gray-50 border-t">
+                <a href="${escapeHtml(digest.permalink)}" class="text-ocean-600 hover:text-ocean-800 text-sm font-medium">
+                    View full digest &rarr;
+                </a>
+            </div>
+        `;
+
+        return entry;
+    }
 
     /**
      * Create an article card element from JSON data
@@ -83,30 +193,7 @@
     }
 
     /**
-     * Escape HTML to prevent XSS
-     */
-    function escapeHtml(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    }
-
-    /**
-     * Format date string
-     */
-    function formatDate(dateStr) {
-        if (!dateStr) return '';
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-        });
-    }
-
-    /**
-     * Load more articles
+     * Load more content
      */
     async function loadMore() {
         if (isLoading || !hasMore) return;
@@ -133,8 +220,16 @@
 
             const data = await response.json();
 
-            // Append new articles
-            if (data.articles && data.articles.length > 0) {
+            // Handle digests
+            if (contentType === 'digests' && data.digests && data.digests.length > 0) {
+                const fragment = document.createDocumentFragment();
+                data.digests.forEach(digest => {
+                    fragment.appendChild(createDigestEntry(digest));
+                });
+                container.appendChild(fragment);
+            }
+            // Handle articles
+            else if (data.articles && data.articles.length > 0) {
                 const fragment = document.createDocumentFragment();
                 data.articles.forEach(article => {
                     fragment.appendChild(createArticleCard(article));
@@ -152,7 +247,7 @@
             }
 
         } catch (error) {
-            console.error('Error loading more articles:', error);
+            console.error('Error loading more content:', error);
             hasMore = false;
             if (loadMoreEl) loadMoreEl.classList.add('hidden');
         } finally {
@@ -188,9 +283,9 @@
     // Initialize
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Client-side search
+    // Client-side search (only for articles)
     const searchInput = document.getElementById('search-input');
-    if (searchInput) {
+    if (searchInput && contentType === 'articles') {
         let searchTimeout;
         searchInput.addEventListener('input', function(e) {
             clearTimeout(searchTimeout);

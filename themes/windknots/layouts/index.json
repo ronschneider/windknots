@@ -1,21 +1,61 @@
+{{- $digests := where .Site.RegularPages "Section" "digests" -}}
+{{- if $digests -}}
+{{- $paginator := .Paginate ($digests.ByDate.Reverse) -}}
+{
+    "page": {{ $paginator.PageNumber }},
+    "totalPages": {{ $paginator.TotalPages }},
+    "hasNext": {{ $paginator.HasNext }},
+    "digests": [
+        {{- range $index, $digest := $paginator.Pages -}}
+        {{- if $index }},{{ end }}
+        {
+            "title": {{ $digest.Title | jsonify }},
+            "date": {{ $digest.Date.Format "2006-01-02" | jsonify }},
+            "permalink": {{ $digest.Permalink | jsonify }},
+            "day": {{ $digest.Date.Format "2" | jsonify }},
+            "month": {{ $digest.Date.Format "January" | jsonify }},
+            "year": {{ $digest.Date.Format "2006" | jsonify }},
+            "themes": [
+                {{- range $ti, $theme := $digest.Params.themes -}}
+                {{- if $ti }},{{ end }}
+                {
+                    "title": {{ $theme.title | jsonify }},
+                    "description": {{ $theme.description | jsonify }},
+                    "image": {{ $theme.image | jsonify }},
+                    "tags": {{ $theme.tags | jsonify }},
+                    "articleCount": {{ len $theme.articles }}
+                }
+                {{- end }}
+            ],
+            "weblinks": {
+                "redditCount": {{ len $digest.Params.weblinks.reddit }},
+                "dealsCount": {{ len $digest.Params.weblinks.deals }},
+                "tripsCount": {{ len $digest.Params.weblinks.trips }}
+            }
+        }
+        {{- end }}
+    ]
+}
+{{- else -}}
 {{- $paginator := .Paginate (where .Site.RegularPages "Section" "articles") -}}
 {
-  "page": {{ $paginator.PageNumber }},
-  "totalPages": {{ $paginator.TotalPages }},
-  "hasNext": {{ $paginator.HasNext }},
-  "articles": [
-    {{- range $index, $page := $paginator.Pages -}}
-    {{- if $index }},{{ end }}
-    {
-      "title": {{ $page.Title | jsonify }},
-      "url": {{ $page.RelPermalink | jsonify }},
-      "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
-      "source_name": {{ $page.Params.source_name | jsonify }},
-      "source_url": {{ $page.Params.source_url | jsonify }},
-      "summary": {{ $page.Params.summary | jsonify }},
-      "image": {{ $page.Params.image | jsonify }},
-      "tags": {{ $page.Params.tags | jsonify }}
-    }
-    {{- end }}
-  ]
+    "page": {{ $paginator.PageNumber }},
+    "totalPages": {{ $paginator.TotalPages }},
+    "hasNext": {{ $paginator.HasNext }},
+    "articles": [
+        {{- range $index, $page := $paginator.Pages -}}
+        {{- if $index }},{{ end }}
+        {
+            "title": {{ $page.Title | jsonify }},
+            "url": {{ $page.RelPermalink | jsonify }},
+            "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
+            "source_name": {{ $page.Params.source_name | jsonify }},
+            "source_url": {{ $page.Params.source_url | jsonify }},
+            "summary": {{ $page.Params.summary | jsonify }},
+            "image": {{ $page.Params.image | jsonify }},
+            "tags": {{ $page.Params.tags | jsonify }}
+        }
+        {{- end }}
+    ]
 }
+{{- end -}}

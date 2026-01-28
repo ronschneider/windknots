@@ -1,0 +1,36 @@
+{{- $paginator := .Paginate .Pages -}}
+{
+    "page": {{ $paginator.PageNumber }},
+    "totalPages": {{ $paginator.TotalPages }},
+    "hasNext": {{ $paginator.HasNext }},
+    "digests": [
+        {{- range $index, $digest := $paginator.Pages -}}
+        {{- if $index }},{{ end }}
+        {
+            "title": {{ .Title | jsonify }},
+            "date": {{ .Date.Format "2006-01-02" | jsonify }},
+            "permalink": {{ .Permalink | jsonify }},
+            "day": {{ .Date.Format "2" | jsonify }},
+            "month": {{ .Date.Format "January" | jsonify }},
+            "year": {{ .Date.Format "2006" | jsonify }},
+            "themes": [
+                {{- range $ti, $theme := .Params.themes -}}
+                {{- if $ti }},{{ end }}
+                {
+                    "title": {{ $theme.title | jsonify }},
+                    "description": {{ $theme.description | jsonify }},
+                    "image": {{ $theme.image | jsonify }},
+                    "tags": {{ $theme.tags | jsonify }},
+                    "articleCount": {{ len $theme.articles }}
+                }
+                {{- end }}
+            ],
+            "weblinks": {
+                "redditCount": {{ len .Params.weblinks.reddit }},
+                "dealsCount": {{ len .Params.weblinks.deals }},
+                "tripsCount": {{ len .Params.weblinks.trips }}
+            }
+        }
+        {{- end }}
+    ]
+}

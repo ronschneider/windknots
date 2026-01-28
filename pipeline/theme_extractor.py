@@ -464,6 +464,77 @@ related_articles:
     return file_path
 
 
+def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
+    """Extract themes and return as structured data (for digest generation).
+
+    Args:
+        min_articles: Minimum articles needed per theme
+        days: Number of days to look back for articles
+
+    Returns:
+        List of theme dicts with all data needed for digest
+    """
+    print("Loading recent articles...")
+    articles = load_recent_articles(days=days)
+    print(f"Found {len(articles)} articles")
+
+    if len(articles) < min_articles:
+        print("Not enough articles for theme extraction")
+        return []
+
+    print("Identifying themes with AI...")
+    themes = identify_themes(articles, min_articles)
+    print(f"Found {len(themes)} potential themes")
+
+    theme_data_list = []
+    for theme_info in themes:
+        print(f"\nProcessing theme: {theme_info['title']}")
+
+        # Get articles for this theme
+        theme_articles = [articles[i] for i in theme_info["article_indices"] if i < len(articles)]
+
+        # Generate editorial content
+        content = generate_theme_content(
+            theme_info["title"],
+            theme_info["description"],
+            theme_articles
+        )
+
+        enhanced_title = content.get("enhanced_title", theme_info["title"])
+
+        # Generate image for the theme
+        print("  Generating header image...")
+        image_path = generate_theme_image(
+            enhanced_title,
+            theme_info["description"],
+            theme_info.get("tags", [])
+        )
+
+        # Build article data for digest
+        article_data = []
+        for a in theme_articles:
+            article_data.append({
+                "filename": a.filename,
+                "title": a.title,
+                "source_name": a.source_name,
+                "summary": a.summary[:200] if a.summary else ""
+            })
+
+        theme_data_list.append({
+            "title": enhanced_title,
+            "description": theme_info["description"],
+            "editorial_intro": content.get("editorial_intro", theme_info["description"]),
+            "image": image_path,
+            "tags": theme_info.get("tags", []),
+            "articles": article_data,
+            "takeaways": content.get("takeaways", [])
+        })
+
+        print(f"  -> Processed: {enhanced_title}")
+
+    return theme_data_list
+
+
 def extract_and_save_themes(min_articles: int = 3) -> list[Path]:
     """Main entry point: analyze recent articles and create theme posts.
 

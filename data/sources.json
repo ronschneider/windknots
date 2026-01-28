@@ -52,5 +52,31 @@
     ],
     "sort": "hot",
     "limit": 15
+  },
+  "weblinks": {
+    "reddit_discussions": {
+      "enabled": true,
+      "min_upvotes": 10,
+      "limit": 8
+    },
+    "deals": {
+      "orvis": {
+        "enabled": true,
+        "url": "https://www.orvis.com/fly-fishing-sale",
+        "limit": 5
+      },
+      "simms": {
+        "enabled": true,
+        "url": "https://www.simmsfishing.com/sale",
+        "limit": 5
+      }
+    },
+    "trips": {
+      "yellowdog": {
+        "enabled": true,
+        "url": "https://www.yellowdogflyfishing.com/destinations",
+        "limit": 5
+      }
+    }
   }
 }

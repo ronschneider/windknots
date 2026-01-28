@@ -1,0 +1,137 @@
+{{/* Partial for rendering a digest entry in the infinite scroll list */}}
+<article class="digest-entry bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+    {{/* Date Header */}}
+    <div class="bg-ocean-600 text-white px-6 py-4">
+        <div class="flex items-baseline gap-3">
+            <span class="text-4xl font-bold">{{ .Date.Format "2" }}</span>
+            <div>
+                <div class="text-lg font-medium">{{ .Date.Format "January" }}</div>
+                <div class="text-ocean-200 text-sm">{{ .Date.Format "2006" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-6">
+        {{/* Themes Grid */}}
+        {{ with .Params.themes }}
+        <div class="mb-8">
+            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Today's Themes</h3>
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {{ range . }}
+                <a href="{{ $.Permalink }}" class="theme-card block bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    {{ if .image }}
+                    <img src="{{ .image }}" alt="{{ .title }}" class="w-full h-32 object-cover">
+                    {{ else }}
+                    <div class="w-full h-32 bg-gradient-to-br from-ocean-400 to-ocean-600"></div>
+                    {{ end }}
+                    <div class="p-4">
+                        <h4 class="font-semibold text-ocean-800 mb-1 line-clamp-2">{{ .title }}</h4>
+                        <p class="text-sm text-gray-600 line-clamp-2">{{ .description }}</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="text-xs text-gray-500">{{ len .articles }} articles</span>
+                            {{ range first 2 .tags }}
+                            <span class="px-2 py-0.5 bg-ocean-100 text-ocean-700 rounded text-xs">{{ . }}</span>
+                            {{ end }}
+                        </div>
+                    </div>
+                </a>
+                {{ end }}
+            </div>
+        </div>
+        {{ end }}
+
+        {{/* Weblinks Sections */}}
+        {{ with .Params.weblinks }}
+        <div class="grid gap-6 md:grid-cols-3">
+            {{/* Reddit Discussions */}}
+            {{ with .reddit }}
+            {{ if . }}
+            <div class="weblinks-section">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+                    </svg>
+                    Discussions
+                </h3>
+                <ul class="space-y-2">
+                    {{ range first 5 . }}
+                    <li>
+                        <a href="{{ .url }}" target="_blank" rel="noopener" class="block hover:bg-gray-50 rounded p-2 -mx-2 transition-colors">
+                            <div class="text-sm text-gray-800 line-clamp-2">{{ .title }}</div>
+                            <div class="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                                <span>{{ .subreddit }}</span>
+                                <span>{{ .upvotes }} upvotes</span>
+                            </div>
+                        </a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </div>
+            {{ end }}
+            {{ end }}
+
+            {{/* Gear Deals */}}
+            {{ with .deals }}
+            {{ if . }}
+            <div class="weblinks-section">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                    </svg>
+                    Gear Deals
+                </h3>
+                <ul class="space-y-2">
+                    {{ range first 5 . }}
+                    <li>
+                        <a href="{{ .url }}" target="_blank" rel="noopener" class="block hover:bg-gray-50 rounded p-2 -mx-2 transition-colors">
+                            <div class="text-sm text-gray-800 line-clamp-2">{{ .title }}</div>
+                            <div class="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                                <span class="font-medium text-ocean-600">{{ .source }}</span>
+                                {{ with .sale_price }}<span class="text-green-600">{{ . }}</span>{{ end }}
+                                {{ with .original_price }}<span class="line-through">{{ . }}</span>{{ end }}
+                            </div>
+                        </a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </div>
+            {{ end }}
+            {{ end }}
+
+            {{/* Trips */}}
+            {{ with .trips }}
+            {{ if . }}
+            <div class="weblinks-section">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Featured Trips
+                </h3>
+                <ul class="space-y-2">
+                    {{ range first 5 . }}
+                    <li>
+                        <a href="{{ .url }}" target="_blank" rel="noopener" class="block hover:bg-gray-50 rounded p-2 -mx-2 transition-colors">
+                            <div class="text-sm text-gray-800 line-clamp-2">{{ .title }}</div>
+                            <div class="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                                {{ with .destination }}<span class="font-medium text-ocean-600">{{ . }}</span>{{ end }}
+                                <span>{{ .source }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </div>
+            {{ end }}
+            {{ end }}
+        </div>
+        {{ end }}
+    </div>
+
+    {{/* View Full Digest Link */}}
+    <div class="px-6 py-4 bg-gray-50 border-t">
+        <a href="{{ .Permalink }}" class="text-ocean-600 hover:text-ocean-800 text-sm font-medium">
+            View full digest &rarr;
+        </a>
+    </div>
+</article>
