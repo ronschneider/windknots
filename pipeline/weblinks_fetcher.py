@@ -255,45 +255,43 @@ def fetch_yellowdog_trips(limit: int = 5) -> list[Trip]:
 
     try:
         with httpx.Client(timeout=30, headers=headers, follow_redirects=True) as client:
-            response = client.get("https://www.yellowdogflyfishing.com/destinations")
+            response = client.get(
+                "https://www.yellowdogflyfishing.com/collections/fly-fishing-current-trip-specials"
+            )
             response.raise_for_status()
 
             soup = BeautifulSoup(response.text, "html.parser")
 
-            # Find destination/trip cards
-            destinations = soup.select(".destination-card, .trip-card, .lodge-card, article")
+            # Trip special cards use .destLodge__linkWrapper
+            cards = soup.select("a.destLodge__linkWrapper")
 
-            for dest in destinations[:limit * 2]:
+            for card in cards[:limit]:
                 try:
-                    title_el = dest.select_one("h2, h3, .title, .destination-name")
-                    link_el = dest.select_one("a[href*='yellowdog']") or dest.select_one("a")
-                    desc_el = dest.select_one("p, .description, .excerpt")
-                    location_el = dest.select_one(".location, .country, .region")
+                    title_el = card.select_one(".destLodge__title")
+                    region_el = card.select_one(".destLodge__region")
+                    special_el = card.select_one(".destSidebarCard__specialHeader")
+                    dates_el = card.select_one(".destSidebarCard__specialDesc")
 
                     if not title_el:
                         continue
 
                     title = title_el.get_text(strip=True)
-                    url = ""
-                    if link_el:
-                        url = link_el.get("href", "")
-                        if not url.startswith("http"):
-                            url = f"https://www.yellowdogflyfishing.com{url}"
+                    href = card.get("href", "")
+                    if not href.startswith("http"):
+                        href = f"https://www.yellowdogflyfishing.com{href}"
 
-                    destination = ""
-                    if location_el:
-                        destination = location_el.get_text(strip=True)
-                    else:
-                        # Try to extract destination from title
-                        match = re.search(r'(?:in|to)\s+([A-Z][a-zA-Z\s]+)', title)
-                        if match:
-                            destination = match.group(1).strip()
+                    destination = region_el.get_text(strip=True) if region_el else ""
 
-                    description = desc_el.get_text(strip=True)[:200] if desc_el else None
+                    desc_parts = []
+                    if special_el:
+                        desc_parts.append(special_el.get_text(strip=True))
+                    if dates_el:
+                        desc_parts.append(dates_el.get_text(strip=True))
+                    description = " — ".join(desc_parts) if desc_parts else None
 
                     trips.append(Trip(
                         title=title,
-                        url=url,
+                        url=href,
                         destination=destination,
                         source="Yellow Dog",
                         description=description

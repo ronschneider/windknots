@@ -10,7 +10,7 @@
   <!-- Header -->
   <header class="mb-8">
     <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
-      <a href="/themes/" class="text-ocean-600 hover:underline">Daily Digest</a>
+      <a href="/" class="text-ocean-600 hover:underline">Home</a>
       <span>/</span>
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
     </div>
@@ -31,36 +31,21 @@
     {{ .Content }}
   </div>
 
-  <!-- Related Articles -->
-  <section class="border-t pt-8">
-    <h2 class="text-2xl font-bold text-ocean-800 mb-6">Related Articles</h2>
-
-    <div class="grid gap-6 md:grid-cols-2">
-      {{ range .Params.related_articles }}
-        {{ $articlePath := printf "articles/%s" . }}
-        {{ $article := $.Site.GetPage $articlePath }}
-        {{ if $article }}
-        <a href="{{ $article.Permalink }}" class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          {{ if $article.Params.image }}
-          <div class="h-40 bg-gray-200 overflow-hidden">
-            <img src="{{ $article.Params.image }}" alt="{{ $article.Title }}"
-                 class="w-full h-full object-cover">
-          </div>
-          {{ end }}
-          <div class="p-4">
-            <div class="text-xs text-gray-500 mb-1">{{ $article.Params.source_name }}</div>
-            <h3 class="font-semibold text-ocean-700 mb-2 line-clamp-2">{{ $article.Title }}</h3>
-            <p class="text-sm text-gray-600 line-clamp-2">{{ $article.Params.summary }}</p>
-          </div>
-        </a>
-        {{ end }}
+  <!-- Key Takeaways -->
+  {{ with .Params.takeaways }}
+  <div class="bg-ocean-50 rounded-lg p-6 mb-12">
+    <h2 class="text-xl font-semibold text-ocean-800 mb-3">Key Takeaways</h2>
+    <ul class="list-disc list-inside text-gray-700 space-y-2">
+      {{ range . }}
+      <li>{{ . }}</li>
       {{ end }}
-    </div>
-  </section>
+    </ul>
+  </div>
+  {{ end }}
 
-  <!-- Back to Roundups -->
+  <!-- Back to Home -->
   <div class="mt-12 pt-8 border-t">
-    <a href="/themes/" class="text-ocean-600 hover:underline">&larr; All Daily Digests</a>
+    <a href="/" class="text-ocean-600 hover:underline">&larr; Back to Digests</a>
   </div>
 </article>
 {{ end }}

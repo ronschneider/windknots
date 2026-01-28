@@ -21,7 +21,7 @@
             <h2 class="text-2xl font-bold text-ocean-800 mb-6">Today's Themes</h2>
 
             {{ range . }}
-            <div class="theme-detail bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+            <div id="theme-{{ .title | urlize }}" class="theme-detail bg-white rounded-xl shadow-sm overflow-hidden mb-8">
                 {{ if .image }}
                 <img src="{{ .image }}" alt="{{ .title }}" class="w-full h-64 object-cover">
                 {{ end }}

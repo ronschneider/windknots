@@ -9,9 +9,9 @@ tags:
   - "equipment"
   - "fly-fishing"
 related_articles:
-  - "2026-01-23-the-ultimate-fly-fishing-gift-guide-2026.md"
-  - "2026-01-21-is-the-new-orvis-recon-the-best-rod-for-the-money-our-though.md"
-  - "2026-01-17-sage-unveils-limited-edition-enforcer-grand-slam-reels-a-col.md"
+  - "2026-01-23-the-ultimate-fly-fishing-gift-guide-2026"
+  - "2026-01-21-is-the-new-orvis-recon-the-best-rod-for-the-money-our-though"
+  - "2026-01-17-sage-unveils-limited-edition-enforcer-grand-slam-reels-a-col"
 ---
 
 As we gear up for another season of fishing, it's essential to assess the tools at our disposal. Whether we're seasoned veterans or newcomers to the sport, understanding the latest in fly fishing equipment can significantly enhance our experience on the water. From rods that offer unparalleled performance to gifts that every angler will appreciate, we’ve gathered insights from recent articles that highlight what we should consider for our next fishing adventure.

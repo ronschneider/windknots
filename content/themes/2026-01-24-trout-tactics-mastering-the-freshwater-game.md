@@ -9,11 +9,11 @@ tags:
   - "freshwater"
   - "techniques"
 related_articles:
-  - "2026-01-24-nice-stocked-rainbow.md"
-  - "2026-01-24-reading-the-body-language-of-highly-aggressive-trout.md"
-  - "2026-01-24-first-ever-rainbow-trout.md"
-  - "2026-01-23-snow-drought-threatening-western-rivers.md"
-  - "2026-01-21-flies-that-catch-big-trout-the-truth-might-surprise-you.md"
+  - "2026-01-24-nice-stocked-rainbow"
+  - "2026-01-24-reading-the-body-language-of-highly-aggressive-trout"
+  - "2026-01-24-first-ever-rainbow-trout"
+  - "2026-01-23-snow-drought-threatening-western-rivers"
+  - "2026-01-21-flies-that-catch-big-trout-the-truth-might-surprise-you"
 ---
 
 As we dive deeper into the world of trout fishing, we recognize that the pursuit of these elusive fish goes far beyond simply casting a line. From experimenting with unconventional bait, as seen in the Reddit post where a wacky rigged trout worm led to a successful catch, to understanding the body language of aggressive trout in fall, our journey is filled with insights that can elevate our angling game. We’re not just fishing; we’re learning to communicate with the fish in their own language—be it through the right flies or the perfect presentation.

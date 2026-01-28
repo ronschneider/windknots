@@ -9,10 +9,10 @@ tags:
   - "trout"
   - "freshwater"
 related_articles:
-  - "2026-01-23-snow-drought-threatening-western-rivers.md"
-  - "2026-01-21-skagit-river-steelhead-season-not-likely-to-open.md"
-  - "2026-01-12-bahamas-fly-fishing-industry-leader-calls-out-government-on-.md"
-  - "2026-01-19-skagit-steelhead-season-hangs-by-a-thread-not-for-lack-of-fi.md"
+  - "2026-01-23-snow-drought-threatening-western-rivers"
+  - "2026-01-21-skagit-river-steelhead-season-not-likely-to-open"
+  - "2026-01-12-bahamas-fly-fishing-industry-leader-calls-out-government-on-"
+  - "2026-01-19-skagit-steelhead-season-hangs-by-a-thread-not-for-lack-of-fi"
 ---
 
 As anglers, we revel in the thrill of casting our lines into pristine waters, yet we must remain vigilant about the environmental challenges that threaten our beloved sport. Recent articles shed light on pressing conservation issues, from the alarming 'snow drought' affecting Western rivers to the bureaucratic hurdles endangering the iconic Skagit River steelhead season. These challenges not only impact our fishing experiences but also the health of our aquatic ecosystems and the future of fish populations we cherish.

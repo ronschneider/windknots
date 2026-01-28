@@ -9,10 +9,10 @@ tags:
   - "trout"
   - "freshwater"
 related_articles:
-  - "2026-01-25-arkansas-implements-new-trout-regulations-following-historic.md"
-  - "2026-01-23-minnesota-s-boundary-water-canoe-area-wilderness-on-the-chop.md"
-  - "2026-01-12-bahamas-fly-fishing-industry-leader-calls-out-government-on-.md"
-  - "2026-01-21-skagit-river-steelhead-season-not-likely-to-open.md"
+  - "2026-01-25-arkansas-implements-new-trout-regulations-following-historic"
+  - "2026-01-23-minnesota-s-boundary-water-canoe-area-wilderness-on-the-chop"
+  - "2026-01-12-bahamas-fly-fishing-industry-leader-calls-out-government-on-"
+  - "2026-01-21-skagit-river-steelhead-season-not-likely-to-open"
 ---
 
 As passionate anglers, we know that our sport is inseparable from the health of our ecosystems. Recent articles highlight a growing awareness of conservation issues that directly impact our fishing experiences and the future of fish populations. From Arkansas' new trout regulations in the wake of a hatchery crisis to the alarming potential threats facing Minnesota's Boundary Waters, it's clear that we must prioritize conservation efforts like never before. These discussions are not just policy debates; they are calls to action for us as stewards of the waters we cherish.

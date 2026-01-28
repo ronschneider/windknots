@@ -9,11 +9,11 @@ tags:
   - "techniques"
   - "tutorials"
 related_articles:
-  - "2026-01-24-2-months-into-fly-tying.md"
-  - "2026-01-24-first-fly-since-1993-and-it-s-ugly.md"
-  - "2026-01-23-3-classic-flies-for-new-tyers.md"
-  - "2026-01-20-tying-tuesday-essential-winter-midges-and-technical-nymphs.md"
-  - "2026-01-13-tying-tuesday-patterns-worth-your-vise-time.md"
+  - "2026-01-24-2-months-into-fly-tying"
+  - "2026-01-24-first-fly-since-1993-and-it-s-ugly"
+  - "2026-01-23-3-classic-flies-for-new-tyers"
+  - "2026-01-20-tying-tuesday-essential-winter-midges-and-technical-nymphs"
+  - "2026-01-13-tying-tuesday-patterns-worth-your-vise-time"
 ---
 
 As anglers, we know that the right fly can mean the difference between a day of casting and a day of catching. This roundup dives deep into the art of fly tying, an essential skill that not only enhances our angling arsenal but also connects us to the craft in a meaningful way. From novice tiers sharing their first attempts to experienced anglers revisiting the vice after decades, the journey of fly tying is as diverse as the waters we fish. 

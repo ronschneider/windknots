@@ -74,7 +74,7 @@
     "trips": {
       "yellowdog": {
         "enabled": true,
-        "url": "https://www.yellowdogflyfishing.com/destinations",
+        "url": "https://www.yellowdogflyfishing.com/collections/fly-fishing-current-trip-specials",
         "limit": 5
       }
     }

@@ -9,10 +9,10 @@ tags:
   - "trout"
   - "techniques"
 related_articles:
-  - "2026-01-25-fishing-streamers-is-still-all-about-presentation.md"
-  - "2026-01-25-roadkill-streamers.md"
-  - "2026-01-24-reading-the-body-language-of-highly-aggressive-trout.md"
-  - "2026-01-21-flies-that-catch-big-trout-the-truth-might-surprise-you.md"
+  - "2026-01-25-fishing-streamers-is-still-all-about-presentation"
+  - "2026-01-25-roadkill-streamers"
+  - "2026-01-24-reading-the-body-language-of-highly-aggressive-trout"
+  - "2026-01-21-flies-that-catch-big-trout-the-truth-might-surprise-you"
 ---
 
 When it comes to fly fishing for big trout, mastering the art of streamer presentation is non-negotiable. We’ve gathered insights from seasoned anglers and experts who emphasize that how we present our streamers can make all the difference between a day of empty casts and a net full of trophies. Whether you’re working articulated patterns or classic styles, it’s clear that the magic lies in the dance of the fly through the water. Articles from Gink & Gasoline and contributions from the fly-tying community highlight techniques and strategies that can elevate our game, especially as we head into the fall months when trout become more aggressive.

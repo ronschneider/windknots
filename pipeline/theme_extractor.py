@@ -23,6 +23,7 @@ class Theme:
     article_ids: list[str]  # List of article filenames
     tags: list[str]
     image_path: str  # Path to generated image
+    takeaways: list[str]
     created: datetime
 
 
@@ -414,6 +415,7 @@ def create_theme_post(theme_data: dict, articles: list[ArticleData]) -> Theme:
         article_ids=[a.filename for a in theme_articles],
         tags=theme_data.get("tags", []),
         image_path=image_path,
+        takeaways=content.get("takeaways", []),
         created=datetime.now()
     )
 
@@ -437,7 +439,13 @@ def save_theme_post(theme: Theme) -> Path:
     tags_yaml = "\n".join(f'  - "{tag}"' for tag in theme.tags)
 
     # Format related articles
-    articles_yaml = "\n".join(f'  - "{aid}"' for aid in theme.article_ids)
+    articles_yaml = "\n".join(
+        f'  - "{aid.removesuffix(".md")}"' for aid in theme.article_ids
+    )
+
+    # Format takeaways
+    takeaways_yaml = "\n".join(f'  - "{t}"' for t in theme.takeaways) if theme.takeaways else ""
+    takeaways_block = f"takeaways:\n{takeaways_yaml}\n" if takeaways_yaml else ""
 
     markdown = f'''---
 title: "{theme.title}"
@@ -449,7 +457,7 @@ tags:
 {tags_yaml}
 related_articles:
 {articles_yaml}
----
+{takeaways_block}---
 
 {theme.editorial_intro}
 
@@ -520,6 +528,28 @@ def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
                 "summary": a.summary[:200] if a.summary else ""
             })
 
+        # Create slug from original theme title
+        slug = theme_info["title"].lower()
+        slug = "".join(c if c.isalnum() or c == " " else "" for c in slug)
+        slug = "-".join(slug.split())[:50]
+
+        # Save standalone theme page
+        theme_obj = Theme(
+            title=enhanced_title,
+            slug=slug,
+            description=theme_info["description"],
+            editorial_intro=content.get("editorial_intro", theme_info["description"]),
+            article_ids=[a.filename for a in theme_articles],
+            tags=theme_info.get("tags", []),
+            image_path=image_path,
+            takeaways=content.get("takeaways", []),
+            created=datetime.now()
+        )
+        saved_path = save_theme_post(theme_obj)
+
+        # Derive the Hugo URL from the saved filename
+        theme_url = f"/themes/{saved_path.stem}/"
+
         theme_data_list.append({
             "title": enhanced_title,
             "description": theme_info["description"],
@@ -527,7 +557,8 @@ def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
             "image": image_path,
             "tags": theme_info.get("tags", []),
             "articles": article_data,
-            "takeaways": content.get("takeaways", [])
+            "takeaways": content.get("takeaways", []),
+            "url": theme_url
         })
 
         print(f"  -> Processed: {enhanced_title}")

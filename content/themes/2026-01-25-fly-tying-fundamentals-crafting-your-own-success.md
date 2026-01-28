@@ -9,9 +9,9 @@ tags:
   - "techniques"
   - "trout"
 related_articles:
-  - "2026-01-23-3-classic-flies-for-new-tyers.md"
-  - "2026-01-20-tying-tuesday-essential-winter-midges-and-technical-nymphs.md"
-  - "2026-01-13-tying-tuesday-patterns-worth-your-vise-time.md"
+  - "2026-01-23-3-classic-flies-for-new-tyers"
+  - "2026-01-20-tying-tuesday-essential-winter-midges-and-technical-nymphs"
+  - "2026-01-13-tying-tuesday-patterns-worth-your-vise-time"
 ---
 
 As we take a deep dive into the fundamentals of fly tying, it's clear that mastering a few foundational patterns can unlock a world of fishing success. From Bob Reece's insights in '3 Classic Flies For New Tyers,' we learn that the Woolly Bugger, Pheasant Tail, and Elk Hair Caddis are not just go-to flies; they are stepping stones to understanding the craft. Each of these flies encapsulates essential techniques that every aspiring tier should grasp, laying the groundwork for more complex creations down the line.

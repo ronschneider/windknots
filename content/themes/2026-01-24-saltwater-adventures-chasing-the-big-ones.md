@@ -10,11 +10,11 @@ tags:
   - "gear"
   - "techniques"
 related_articles:
-  - "2026-01-24-first-time-fly-fishing-in-the-salt.md"
-  - "2026-01-24-there-are-good-days-and-then-there-are-giant-tarpon-days.md"
-  - "2026-01-17-sage-unveils-limited-edition-enforcer-grand-slam-reels-a-col.md"
-  - "2026-01-23-saltwater-bug.md"
-  - "2024-10-15-podcast-trout-tarpon-and-other-critters-in-costa-rica-with-k.md"
+  - "2026-01-24-first-time-fly-fishing-in-the-salt"
+  - "2026-01-24-there-are-good-days-and-then-there-are-giant-tarpon-days"
+  - "2026-01-17-sage-unveils-limited-edition-enforcer-grand-slam-reels-a-col"
+  - "2026-01-23-saltwater-bug"
+  - "2024-10-15-podcast-trout-tarpon-and-other-critters-in-costa-rica-with-k"
 ---
 
 As we dive into the exhilarating world of saltwater fly fishing, it’s clear that the pursuit of species like tarpon, bonefish, and permit offers both challenge and thrill. From firsthand accounts of rookie anglers navigating the beaches of La Paz to the latest gear revelations from Sage, we’re reminded that every cast can lead to a story worth telling. This isn’t just about hooking the big one; it’s about the journey we embark on and the lessons learned along the way.

@@ -9,10 +9,10 @@ tags:
   - "equipment"
   - "fly-fishing"
 related_articles:
-  - "2026-01-24-my-favorite-fishing-sunglasses-sanofan-fluid-tint.md"
-  - "2026-01-22-keep-your-hands-on-the-cork.md"
-  - "2026-01-21-is-the-new-orvis-recon-the-best-rod-for-the-money-our-though.md"
-  - "2024-11-25-how-to-get-started-in-trout-spey-with-pete-kutzer.md"
+  - "2026-01-24-my-favorite-fishing-sunglasses-sanofan-fluid-tint"
+  - "2026-01-22-keep-your-hands-on-the-cork"
+  - "2026-01-21-is-the-new-orvis-recon-the-best-rod-for-the-money-our-though"
+  - "2024-11-25-how-to-get-started-in-trout-spey-with-pete-kutzer"
 ---
 
 As we gear up for our next fishing adventure, it’s crucial to ensure we have the right tools at our disposal. From protective eyewear to reliable rods, our gear can make or break the experience on the water. In this roundup, we delve into the must-haves every fly angler should consider, drawing insights from fellow anglers who have shared their favorite essentials. Whether you're a novice casting your first line or a seasoned pro refining your setup, there’s something here for everyone looking to elevate their fishing game.

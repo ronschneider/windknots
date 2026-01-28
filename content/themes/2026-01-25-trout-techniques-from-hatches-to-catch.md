@@ -9,10 +9,10 @@ tags:
   - "techniques"
   - "hatches"
 related_articles:
-  - "2026-01-25-arkansas-implements-new-trout-regulations-following-historic.md"
-  - "2026-01-24-reading-the-body-language-of-highly-aggressive-trout.md"
-  - "2026-01-20-tying-tuesday-essential-winter-midges-and-technical-nymphs.md"
-  - "2026-01-13-tying-tuesday-patterns-worth-your-vise-time.md"
+  - "2026-01-25-arkansas-implements-new-trout-regulations-following-historic"
+  - "2026-01-24-reading-the-body-language-of-highly-aggressive-trout"
+  - "2026-01-20-tying-tuesday-essential-winter-midges-and-technical-nymphs"
+  - "2026-01-13-tying-tuesday-patterns-worth-your-vise-time"
 ---
 
 As we dive into the world of trout fishing, it's clear that our approach must evolve with the seasons. From the new regulations impacting the White River system to the nuanced techniques required for catching trout during the colder months, we are reminded that adaptability is key to our success on the water. The articles we've gathered showcase not just the challenges we face in maintaining sustainable fish populations, but also the artistry and strategy involved in maximizing our catch rates throughout the year.

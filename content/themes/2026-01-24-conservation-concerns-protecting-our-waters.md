@@ -8,10 +8,10 @@ tags:
   - "conservation"
   - "freshwater"
 related_articles:
-  - "2026-01-23-can-you-help-me-identify-this-trout-is-it-wild-or-stocked.md"
-  - "2026-01-23-minnesota-s-boundary-water-canoe-area-wilderness-on-the-chop.md"
-  - "2026-01-21-skagit-river-steelhead-season-not-likely-to-open.md"
-  - "2026-01-12-bahamas-fly-fishing-industry-leader-calls-out-government-on-.md"
+  - "2026-01-23-can-you-help-me-identify-this-trout-is-it-wild-or-stocked"
+  - "2026-01-23-minnesota-s-boundary-water-canoe-area-wilderness-on-the-chop"
+  - "2026-01-21-skagit-river-steelhead-season-not-likely-to-open"
+  - "2026-01-12-bahamas-fly-fishing-industry-leader-calls-out-government-on-"
 ---
 
 As anglers, our connection to the water goes beyond the simple joy of casting a line; it is intertwined with our responsibility to protect the ecosystems that sustain our favorite species. Recent discussions around conservation issues shed light on the critical challenges facing freshwater habitats and the fish that inhabit them. From the potential threat of industrial mining in the Boundary Waters to the uncertain future of the Skagit River’s steelhead season, the implications of these developments reach far beyond local waters. We must recognize that the health of our fisheries is inextricably linked to the political and environmental decisions made today.

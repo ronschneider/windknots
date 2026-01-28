@@ -18,7 +18,7 @@
             <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Today's Themes</h3>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {{ range . }}
-                <a href="{{ $.Permalink }}" class="theme-card block bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="{{ with .url }}{{ . }}{{ else }}{{ $.Permalink }}{{ end }}" class="theme-card block bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                     {{ if .image }}
                     <img src="{{ .image }}" alt="{{ .title }}" class="w-full h-32 object-cover">
                     {{ else }}
