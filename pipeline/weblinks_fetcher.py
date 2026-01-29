@@ -1,9 +1,10 @@
-"""Fetch weblinks for daily digest: Reddit discussions, gear deals, new trips."""
+"""Fetch weblinks for daily digest: Reddit discussions, gear deals, new trips, YouTube videos."""
 
 import json
+import os
 import re
 from dataclasses import dataclass, asdict
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -41,6 +42,18 @@ class Trip:
     destination: str
     source: str
     description: Optional[str] = None
+
+
+@dataclass
+class YouTubeVideo:
+    """A fly fishing YouTube video."""
+    title: str
+    url: str
+    channel: str
+    views: str
+    duration: str
+    thumbnail: str
+    published: str
 
 
 def load_sources() -> dict:
@@ -306,6 +319,113 @@ def fetch_yellowdog_trips(limit: int = 5) -> list[Trip]:
     return trips[:limit]
 
 
+def _format_duration(iso_duration: str) -> str:
+    """Convert ISO 8601 duration (PT1H2M3S) to human-readable format."""
+    match = re.match(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", iso_duration)
+    if not match:
+        return ""
+    hours, minutes, seconds = match.groups()
+    parts = []
+    if hours:
+        parts.append(f"{hours}:{int(minutes or 0):02d}:{int(seconds or 0):02d}")
+    else:
+        parts.append(f"{int(minutes or 0)}:{int(seconds or 0):02d}")
+    return parts[0]
+
+
+def _format_views(count: str) -> str:
+    """Format view count to human-readable string."""
+    n = int(count)
+    if n >= 1_000_000:
+        return f"{n / 1_000_000:.1f}M views"
+    if n >= 1_000:
+        return f"{n / 1_000:.1f}K views"
+    return f"{n} views"
+
+
+def fetch_youtube_videos(limit: int = 6) -> list[YouTubeVideo]:
+    """Fetch recent fly fishing videos from YouTube.
+
+    Uses YouTube Data API v3 search endpoint to find trending videos.
+    Requires YOUTUBE_API_KEY environment variable.
+
+    Args:
+        limit: Maximum number of videos to return
+
+    Returns:
+        List of YouTubeVideo objects, empty if no API key or on error
+    """
+    api_key = os.environ.get("YOUTUBE_API_KEY")
+    if not api_key:
+        print("    No YOUTUBE_API_KEY set, skipping YouTube videos")
+        return []
+
+    videos = []
+    published_after = (datetime.now(timezone.utc) - timedelta(hours=48)).isoformat()
+
+    try:
+        with httpx.Client(timeout=30) as client:
+            # Search for recent fly fishing videos
+            search_response = client.get(
+                "https://www.googleapis.com/youtube/v3/search",
+                params={
+                    "part": "snippet",
+                    "q": "fly fishing",
+                    "type": "video",
+                    "order": "relevance",
+                    "publishedAfter": published_after,
+                    "maxResults": limit,
+                    "key": api_key,
+                },
+            )
+            search_response.raise_for_status()
+            search_data = search_response.json()
+
+            items = search_data.get("items", [])
+            if not items:
+                return []
+
+            # Get video details (view count, duration) in a single call
+            video_ids = ",".join(item["id"]["videoId"] for item in items)
+            details_response = client.get(
+                "https://www.googleapis.com/youtube/v3/videos",
+                params={
+                    "part": "contentDetails,statistics",
+                    "id": video_ids,
+                    "key": api_key,
+                },
+            )
+            details_response.raise_for_status()
+            details_data = details_response.json()
+
+            # Build lookup of video details
+            details_map = {}
+            for detail in details_data.get("items", []):
+                details_map[detail["id"]] = detail
+
+            for item in items:
+                video_id = item["id"]["videoId"]
+                snippet = item["snippet"]
+                detail = details_map.get(video_id, {})
+                stats = detail.get("statistics", {})
+                content = detail.get("contentDetails", {})
+
+                videos.append(YouTubeVideo(
+                    title=snippet.get("title", ""),
+                    url=f"https://www.youtube.com/watch?v={video_id}",
+                    channel=snippet.get("channelTitle", ""),
+                    views=_format_views(stats.get("viewCount", "0")),
+                    duration=_format_duration(content.get("duration", "")),
+                    thumbnail=snippet.get("thumbnails", {}).get("medium", {}).get("url", ""),
+                    published=snippet.get("publishedAt", ""),
+                ))
+
+    except Exception as e:
+        print(f"Error fetching YouTube videos: {e}")
+
+    return videos[:limit]
+
+
 def fetch_all_weblinks() -> dict:
     """Fetch all weblinks for the daily digest.
 
@@ -330,13 +450,18 @@ def fetch_all_weblinks() -> dict:
     trips = fetch_yellowdog_trips(limit=5)
     print(f"    Found {len(trips)} trips")
 
+    print("  - YouTube videos...")
+    youtube = fetch_youtube_videos(limit=6)
+    print(f"    Found {len(youtube)} videos")
+
     # Combine deals
     all_deals = orvis_deals + simms_deals
 
     return {
         "reddit": [asdict(r) for r in reddit],
         "deals": [asdict(d) for d in all_deals],
-        "trips": [asdict(t) for t in trips]
+        "trips": [asdict(t) for t in trips],
+        "youtube": [asdict(v) for v in youtube],
     }
 
 
@@ -351,3 +476,6 @@ if __name__ == "__main__":
     print(f"\n=== Trips ({len(weblinks['trips'])}) ===")
     for t in weblinks["trips"][:3]:
         print(f"  [{t['destination']}] {t['title'][:50]}...")
+    print(f"\n=== YouTube ({len(weblinks['youtube'])}) ===")
+    for v in weblinks["youtube"][:3]:
+        print(f"  [{v['channel']}] {v['title'][:50]}...")

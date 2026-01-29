@@ -87,7 +87,7 @@
         <section class="mb-12">
             <h2 class="font-display text-2xl font-bold text-slate-800 mb-6">From Around the Web</h2>
 
-            <div class="grid gap-8 md:grid-cols-3">
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                 {{/* Reddit Discussions */}}
                 {{ with .reddit }}
                 {{ if . }}
@@ -156,6 +156,33 @@
                             {{ with .description }}
                             <p class="text-xs text-slate-400 mt-0.5 line-clamp-2">{{ . }}</p>
                             {{ end }}
+                        </li>
+                        {{ end }}
+                    </ul>
+                </div>
+                {{ end }}
+                {{ end }}
+
+                {{/* YouTube Videos */}}
+                {{ with .youtube }}
+                {{ if . }}
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <svg class="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                        Videos
+                    </h3>
+                    <ul class="space-y-3">
+                        {{ range . }}
+                        <li>
+                            {{ with .thumbnail }}
+                            <a href="{{ .url }}" target="_blank" rel="noopener" class="block mb-1">
+                                <img src="{{ . }}" alt="" class="w-full rounded">
+                            </a>
+                            {{ end }}
+                            <a href="{{ .url }}" target="_blank" rel="noopener" class="text-river-700 hover:text-river-900 transition-colors text-sm">{{ .title }}</a>
+                            <div class="text-xs text-slate-400 mt-0.5">{{ .channel }} &middot; {{ .views }}{{ with .duration }} &middot; {{ . }}{{ end }}</div>
                         </li>
                         {{ end }}
                     </ul>
