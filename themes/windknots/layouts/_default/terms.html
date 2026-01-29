@@ -1,15 +1,15 @@
 {{ define "main" }}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ .Title }}</h1>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="font-display text-3xl font-bold text-slate-900 mb-8">{{ .Title }}</h1>
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {{ range .Data.Terms.Alphabetical }}
-        <a href="{{ .Page.Permalink }}" class="group p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+        <a href="{{ .Page.Permalink }}" class="group p-4 bg-white rounded-lg border border-slate-200 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between">
-                <span class="text-lg font-medium text-gray-900 group-hover:text-ocean-600 transition-colors capitalize">
+                <span class="text-lg font-medium text-slate-800 group-hover:text-copper-600 transition-colors capitalize">
                     {{ .Page.Title }}
                 </span>
-                <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                <span class="text-sm text-slate-400 bg-slate-100 px-2 py-1 rounded-full">
                     {{ .Count }}
                 </span>
             </div>

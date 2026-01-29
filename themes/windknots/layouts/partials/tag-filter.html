@@ -1,9 +1,9 @@
 <div class="tag-filter mb-6">
     <div class="flex flex-wrap gap-2 items-center">
-        <span class="text-sm text-gray-500 mr-2">Filter:</span>
+        <span class="text-sm text-slate-400 mr-2">Filter:</span>
 
         <button
-            class="tag-filter-btn active px-3 py-1.5 text-sm font-medium rounded-full bg-ocean-600 text-white transition-colors"
+            class="tag-filter-btn active px-3 py-1.5 text-sm font-medium rounded-full bg-copper-600 text-white transition-colors"
             data-tag="all"
         >
             All
@@ -12,7 +12,7 @@
         {{ $tags := slice "freshwater" "saltwater" "fly-fishing" "gear" "techniques" "news" "travel" "conservation" }}
         {{ range $tags }}
         <button
-            class="tag-filter-btn px-3 py-1.5 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+            class="tag-filter-btn px-3 py-1.5 text-sm font-medium rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors"
             data-tag="{{ . }}"
         >
             {{ . | title }}
@@ -23,12 +23,12 @@
 
 <style>
     .tag-filter-btn.active {
-        background-color: rgb(8 145 178);
+        background-color: rgb(196 106 32);
         color: white;
     }
     .tag-filter-btn:not(.active) {
-        background-color: rgb(229 231 235);
-        color: rgb(55 65 81);
+        background-color: rgb(226 232 240);
+        color: rgb(71 85 105);
     }
 </style>
 

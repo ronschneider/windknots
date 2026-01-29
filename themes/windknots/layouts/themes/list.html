@@ -1,35 +1,35 @@
 {{ define "main" }}
 <div class="max-w-4xl mx-auto px-4 py-8">
   <header class="mb-12">
-    <h1 class="text-4xl font-bold text-ocean-800 mb-2">{{ .Title }}</h1>
-    <p class="text-lg text-gray-500 mb-4">{{ now.Format "January 2, 2006" }}</p>
-    <p class="text-xl text-gray-600">{{ .Description }}</p>
+    <h1 class="font-display text-4xl font-bold text-slate-900 mb-2">{{ .Title }}</h1>
+    <p class="text-lg text-slate-400 mb-4">{{ now.Format "January 2, 2006" }}</p>
+    <p class="text-xl text-slate-600">{{ .Description }}</p>
   </header>
 
   <div class="space-y-8">
     {{ range .Pages.ByDate.Reverse }}
-    <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <article class="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
       {{ if .Params.image }}
       <a href="{{ .Permalink }}" class="block">
         <img src="{{ .Params.image }}" alt="{{ .Title }}" class="w-full h-48 object-cover">
       </a>
       {{ end }}
       <div class="p-6">
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+        <div class="flex items-center gap-2 text-sm text-slate-400 mb-2">
           <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
           <span>&bull;</span>
           <span>{{ len .Params.related_articles }} articles</span>
         </div>
 
-        <h2 class="text-2xl font-bold text-ocean-700 mb-3">
-          <a href="{{ .Permalink }}" class="hover:text-ocean-500">{{ .Title }}</a>
+        <h2 class="font-display text-2xl font-bold text-slate-800 mb-3">
+          <a href="{{ .Permalink }}" class="hover:text-copper-600 transition-colors">{{ .Title }}</a>
         </h2>
 
-        <p class="text-gray-600 mb-4">{{ .Params.description }}</p>
+        <p class="text-slate-600 mb-4">{{ .Params.description }}</p>
 
         <div class="flex flex-wrap gap-2">
           {{ range .Params.tags }}
-          <span class="px-3 py-1 bg-ocean-100 text-ocean-700 rounded-full text-sm">{{ . }}</span>
+          <span class="px-3 py-1 bg-copper-100 text-copper-700 rounded-full text-sm">{{ . }}</span>
           {{ end }}
         </div>
       </div>

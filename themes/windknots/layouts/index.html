@@ -1,18 +1,21 @@
 {{ define "main" }}
-<!-- Hero Section -->
-<section class="bg-gradient-to-br from-ocean-600 to-ocean-800 text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Windknots</h1>
-        <p class="text-xl text-ocean-100 max-w-2xl mx-auto">
+<!-- Newspaper Masthead -->
+<section class="py-12 border-b border-slate-300">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <hr class="border-slate-400 mb-6">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 mb-3">Curated Fly-Fishing Journalism</p>
+        <h1 class="font-display text-5xl md:text-6xl font-bold text-slate-900 mb-3">Windknots</h1>
+        <p class="text-lg text-slate-500 max-w-xl mx-auto font-light">
             Your daily catch of fishing news, tips, and stories from around the web.
         </p>
+        <hr class="border-slate-400 mt-6">
     </div>
 </section>
 
 <!-- Daily Digests Stream -->
 {{ $digests := where .Site.RegularPages "Section" "digests" }}
 {{ if $digests }}
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div id="digests-container">
         {{ $paginator := .Paginate ($digests.ByDate.Reverse) }}
         {{ range $paginator.Pages }}
@@ -22,7 +25,7 @@
 
     {{ if $paginator.HasNext }}
     <div id="load-more" class="text-center py-8">
-        <div class="inline-flex items-center text-ocean-600">
+        <div class="inline-flex items-center text-slate-500">
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -32,7 +35,7 @@
     </div>
     {{ end }}
 
-    <div id="no-more" class="text-center py-8 text-gray-500 hidden">
+    <div id="no-more" class="text-center py-8 text-slate-400 hidden">
         You've reached the beginning. Check back tomorrow for fresh content!
     </div>
 </div>
@@ -50,9 +53,9 @@
 <!-- Fallback: Show articles if no digests exist yet -->
 {{ $articles := where .Site.RegularPages "Section" "articles" }}
 {{ if $articles }}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-8">
-        <p class="text-gray-600">Daily digests coming soon! In the meantime, browse our latest articles:</p>
+        <p class="text-slate-500">Daily digests coming soon! In the meantime, browse our latest articles:</p>
     </div>
 
     {{ partial "tag-filter.html" . }}
@@ -66,7 +69,7 @@
 
     {{ if $paginator.HasNext }}
     <div id="load-more" class="text-center py-8">
-        <div class="inline-flex items-center text-ocean-600">
+        <div class="inline-flex items-center text-slate-500">
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -76,7 +79,7 @@
     </div>
     {{ end }}
 
-    <div id="no-more" class="text-center py-8 text-gray-500 hidden">
+    <div id="no-more" class="text-center py-8 text-slate-400 hidden">
         You've reached the end. Check back tomorrow for fresh content!
     </div>
 </div>
@@ -92,8 +95,8 @@
 </script>
 {{ else }}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-    <p class="text-gray-600">No content yet. Run the pipeline to generate your first daily digest!</p>
-    <code class="block mt-4 bg-gray-100 p-4 rounded text-sm">python -m pipeline.digest_generator</code>
+    <p class="text-slate-500">No content yet. Run the pipeline to generate your first daily digest!</p>
+    <code class="block mt-4 bg-slate-100 p-4 rounded text-sm">python -m pipeline.digest_generator</code>
 </div>
 {{ end }}
 {{ end }}

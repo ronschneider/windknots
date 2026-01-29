@@ -1,41 +1,35 @@
-<header class="bg-white shadow-sm sticky top-0 z-50">
-    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b border-slate-200/60">
+    <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-            <!-- Logo -->
-            <a href="/" class="flex items-center space-x-2">
-                <svg class="h-8 w-8 text-ocean-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="currentColor" opacity="0.2"/>
-                    <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c1.66 0 3.16-.67 4.24-1.76" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M16.24 10.24c.48.48.76 1.13.76 1.76 0 .63-.28 1.28-.76 1.76" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M18 8c1.1 1.1 1.75 2.6 1.75 4s-.65 2.9-1.75 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span class="text-xl font-bold text-gray-900">Windknots</span>
+            <!-- Wordmark -->
+            <a href="/" class="flex items-center">
+                <span class="font-display text-2xl font-bold text-slate-900 tracking-tight">Windknots</span>
             </a>
 
             <!-- Navigation -->
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="/" class="text-gray-600 hover:text-ocean-600 transition-colors font-medium">Home</a>
-                <a href="/themes/" class="text-gray-600 hover:text-ocean-600 transition-colors font-medium">Daily Digest</a>
-                <a href="/tags/" class="text-gray-600 hover:text-ocean-600 transition-colors font-medium">Tags</a>
-                <a href="/about/" class="text-gray-600 hover:text-ocean-600 transition-colors font-medium">About</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" class="text-slate-500 hover:text-copper-600 transition-colors text-sm font-semibold uppercase tracking-wider">Home</a>
+                <a href="/themes/" class="text-slate-500 hover:text-copper-600 transition-colors text-sm font-semibold uppercase tracking-wider">Daily Digest</a>
+                <a href="/tags/" class="text-slate-500 hover:text-copper-600 transition-colors text-sm font-semibold uppercase tracking-wider">Tags</a>
+                <a href="/about/" class="text-slate-500 hover:text-copper-600 transition-colors text-sm font-semibold uppercase tracking-wider">About</a>
             </div>
 
-            <!-- Search (Client-side) -->
+            <!-- Search -->
             <div class="flex items-center">
                 <div class="relative">
                     <input
                         type="text"
                         id="search-input"
-                        placeholder="Search articles..."
-                        class="w-48 md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ocean-500 focus:border-transparent"
+                        placeholder="Search..."
+                        class="w-44 md:w-56 pl-10 pr-4 py-2 bg-stone-50 border-0 rounded-none border-b border-slate-300 text-sm focus:outline-none focus:border-copper-500 transition-colors"
                     >
-                    <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="absolute left-3 top-2.5 h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
                 </div>
 
                 <!-- Mobile menu button -->
-                <button id="mobile-menu-btn" class="ml-4 md:hidden p-2 rounded-md text-gray-600 hover:text-ocean-600 hover:bg-gray-100">
+                <button id="mobile-menu-btn" class="ml-4 md:hidden p-2 rounded-md text-slate-500 hover:text-copper-600 hover:bg-stone-100">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -45,10 +39,10 @@
 
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden pb-4">
-            <a href="/" class="block py-2 text-gray-600 hover:text-ocean-600">Home</a>
-            <a href="/themes/" class="block py-2 text-gray-600 hover:text-ocean-600">Daily Digest</a>
-            <a href="/tags/" class="block py-2 text-gray-600 hover:text-ocean-600">Tags</a>
-            <a href="/about/" class="block py-2 text-gray-600 hover:text-ocean-600">About</a>
+            <a href="/" class="block py-2 text-slate-600 hover:text-copper-600 text-sm uppercase tracking-wider">Home</a>
+            <a href="/themes/" class="block py-2 text-slate-600 hover:text-copper-600 text-sm uppercase tracking-wider">Daily Digest</a>
+            <a href="/tags/" class="block py-2 text-slate-600 hover:text-copper-600 text-sm uppercase tracking-wider">Tags</a>
+            <a href="/about/" class="block py-2 text-slate-600 hover:text-copper-600 text-sm uppercase tracking-wider">About</a>
         </div>
     </nav>
 </header>

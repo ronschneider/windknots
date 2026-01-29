@@ -1,6 +1,6 @@
 {{ define "main" }}
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-3xl font-bold text-ocean-800 mb-8">Daily Digests</h1>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="font-display text-3xl font-bold text-slate-900 mb-8">Daily Digests</h1>
 
     <div id="digests-container">
         {{ $paginator := .Paginate .Pages }}
@@ -11,7 +11,7 @@
 
     {{ if $paginator.HasNext }}
     <div id="load-more" class="text-center py-8">
-        <div class="inline-flex items-center text-ocean-600">
+        <div class="inline-flex items-center text-slate-500">
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -21,7 +21,7 @@
     </div>
     {{ end }}
 
-    <div id="no-more" class="text-center py-8 text-gray-500 hidden">
+    <div id="no-more" class="text-center py-8 text-slate-400 hidden">
         You've reached the beginning. That's all the digests!
     </div>
 </div>

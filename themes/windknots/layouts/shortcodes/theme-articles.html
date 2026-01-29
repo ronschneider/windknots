@@ -4,11 +4,11 @@
     {{ $articlePath := printf "articles/%s" . }}
     {{ $article := $.Site.GetPage $articlePath }}
     {{ if $article }}
-    <a href="{{ $article.Permalink }}" class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <a href="{{ $article.Permalink }}" class="block bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
       <div class="p-4">
-        <div class="text-xs text-gray-500 mb-1">{{ $article.Params.source_name }}</div>
-        <h3 class="font-semibold text-ocean-700 mb-2 line-clamp-2">{{ $article.Title }}</h3>
-        <p class="text-sm text-gray-600 line-clamp-2">{{ $article.Params.summary }}</p>
+        <div class="text-xs text-slate-400 mb-1">{{ $article.Params.source_name }}</div>
+        <h3 class="font-semibold text-slate-800 mb-2 line-clamp-2">{{ $article.Title }}</h3>
+        <p class="text-sm text-slate-500 line-clamp-2">{{ $article.Params.summary }}</p>
       </div>
     </a>
     {{ end }}

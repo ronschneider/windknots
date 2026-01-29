@@ -1,30 +1,48 @@
 {{ define "main" }}
 <article class="max-w-4xl mx-auto px-4 py-8">
-  <!-- Hero Image -->
+  <!-- Hero Image with Title Overlay -->
   {{ if .Params.image }}
-  <div class="mb-8 -mx-4 md:mx-0 md:rounded-xl overflow-hidden shadow-lg">
+  <div class="relative -mx-4 md:mx-0 md:rounded-xl overflow-hidden shadow-lg mb-8">
     <img src="{{ .Params.image }}" alt="{{ .Title }}" class="w-full h-64 md:h-96 object-cover">
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+    <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+      <div class="flex flex-wrap gap-2 mb-3">
+        {{ range .Params.tags }}
+        <a href="/tags/{{ . | urlize }}/" class="px-3 py-1 bg-copper-500/80 text-white rounded-full text-sm font-semibold hover:bg-copper-600 transition-colors">
+          {{ . }}
+        </a>
+        {{ end }}
+      </div>
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white leading-snug">{{ .Title }}</h1>
+    </div>
   </div>
-  {{ end }}
-
-  <!-- Header -->
+  {{ else }}
+  <!-- Header (no image) -->
   <header class="mb-8">
-    <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
-      <a href="/" class="text-ocean-600 hover:underline">Home</a>
+    <div class="flex items-center gap-2 text-sm text-slate-400 mb-4">
+      <a href="/" class="text-copper-600 hover:underline">Home</a>
       <span>/</span>
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
     </div>
-
-    <h1 class="text-4xl font-bold text-ocean-800 mb-4">{{ .Title }}</h1>
-
+    <h1 class="font-display text-4xl font-bold text-slate-900 mb-4">{{ .Title }}</h1>
     <div class="flex flex-wrap gap-2 mb-6">
       {{ range .Params.tags }}
-      <a href="/tags/{{ . | urlize }}/" class="px-3 py-1 bg-ocean-100 text-ocean-700 rounded-full text-sm hover:bg-ocean-200">
+      <a href="/tags/{{ . | urlize }}/" class="px-3 py-1 bg-copper-100 text-copper-700 rounded-full text-sm font-semibold hover:bg-copper-200 transition-colors">
         {{ . }}
       </a>
       {{ end }}
     </div>
   </header>
+  {{ end }}
+
+  <!-- Breadcrumb (when hero image present) -->
+  {{ if .Params.image }}
+  <div class="flex items-center gap-2 text-sm text-slate-400 mb-6">
+    <a href="/" class="text-copper-600 hover:underline">Home</a>
+    <span>/</span>
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+  </div>
+  {{ end }}
 
   <!-- Editorial Content -->
   <div class="prose prose-lg max-w-none mb-12">
@@ -33,9 +51,9 @@
 
   <!-- Key Takeaways -->
   {{ with .Params.takeaways }}
-  <div class="bg-ocean-50 rounded-lg p-6 mb-12">
-    <h2 class="text-xl font-semibold text-ocean-800 mb-3">Key Takeaways</h2>
-    <ul class="list-disc list-inside text-gray-700 space-y-2">
+  <div class="border-l-4 border-copper-400 bg-stone-100 rounded-r-lg p-6 mb-12">
+    <h2 class="font-display text-xl font-semibold text-slate-800 mb-3">Key Takeaways</h2>
+    <ul class="list-disc list-inside text-slate-700 space-y-2">
       {{ range . }}
       <li>{{ . }}</li>
       {{ end }}
@@ -44,8 +62,8 @@
   {{ end }}
 
   <!-- Back to Home -->
-  <div class="mt-12 pt-8 border-t">
-    <a href="/" class="text-ocean-600 hover:underline">&larr; Back to Digests</a>
+  <div class="mt-12 pt-8 border-t border-slate-200">
+    <a href="/" class="text-copper-600 hover:text-copper-800 font-semibold">&larr; Back to Digests</a>
   </div>
 </article>
 {{ end }}

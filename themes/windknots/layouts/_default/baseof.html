@@ -28,24 +28,25 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-stone-50 text-slate-800 min-h-screen flex flex-col font-sans">
     {{ partial "header.html" . }}
 
     <main class="flex-grow">
         {{ block "main" . }}{{ end }}
     </main>
 
-    <footer class="bg-ocean-900 text-white py-8 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer class="bg-slate-900 text-slate-300 py-10 mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
-                    <p class="text-ocean-200">&copy; {{ now.Year }} Windknots. Aggregated fishing content from around the web.</p>
+                    <span class="font-display text-xl text-white tracking-wide">Windknots</span>
+                    <p class="text-slate-400 text-sm mt-1">&copy; {{ now.Year }} Curated fly-fishing journalism from around the web.</p>
                 </div>
-                <div class="flex space-x-6">
-                    <a href="/about/" class="text-ocean-200 hover:text-white transition-colors">About</a>
-                    <a href="/tags/" class="text-ocean-200 hover:text-white transition-colors">Tags</a>
+                <div class="flex space-x-6 text-sm">
+                    <a href="/about/" class="text-slate-400 hover:text-white transition-colors uppercase tracking-wider">About</a>
+                    <a href="/tags/" class="text-slate-400 hover:text-white transition-colors uppercase tracking-wider">Tags</a>
                 </div>
             </div>
         </div>

@@ -7,35 +7,61 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'ocean': {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+        'copper': {
+          50:  '#fdf8f1',
+          100: '#f9edda',
+          200: '#f2d7b0',
+          300: '#e9bb7d',
+          400: '#df9a48',
+          500: '#d6802a',
+          600: '#c46a20',
+          700: '#a3521d',
+          800: '#84421f',
+          900: '#6c371c',
         },
-        'forest': {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-        }
+        'river': {
+          50:  '#f0f7fb',
+          100: '#dcedf5',
+          200: '#bddcea',
+          300: '#8ec5da',
+          400: '#58a6c4',
+          500: '#3d8bab',
+          600: '#347191',
+          700: '#2e5c76',
+          800: '#2b4d63',
+          900: '#284154',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['"Playfair Display"', 'Georgia', 'serif'],
+        sans: ['"Source Sans 3"', 'system-ui', 'sans-serif'],
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': theme('colors.slate.700'),
+            '--tw-prose-headings': theme('colors.slate.900'),
+            '--tw-prose-links': theme('colors.river.700'),
+            '--tw-prose-bold': theme('colors.slate.900'),
+            '--tw-prose-quotes': theme('colors.slate.600'),
+            '--tw-prose-quote-borders': theme('colors.copper.300'),
+            h1: { fontFamily: theme('fontFamily.display').join(', ') },
+            h2: { fontFamily: theme('fontFamily.display').join(', ') },
+            h3: { fontFamily: theme('fontFamily.display').join(', ') },
+            h4: { fontFamily: theme('fontFamily.display').join(', ') },
+            a: {
+              color: theme('colors.river.700'),
+              '&:hover': { color: theme('colors.river.900') },
+            },
+            blockquote: {
+              borderLeftColor: theme('colors.copper.300'),
+            },
+          },
+        },
+      }),
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }
