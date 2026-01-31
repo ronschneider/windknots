@@ -87,7 +87,7 @@ def build_digest_frontmatter(
 
     return {
         "title": f"Daily Digest - {formatted_date}",
-        "date": datetime.combine(target_date, datetime.min.time().replace(hour=8)).isoformat() + "Z",
+        "date": datetime.combine(target_date, datetime.min.time()).isoformat() + "Z",
         "type": "digest",
         "themes": themes,
         "weblinks": weblinks

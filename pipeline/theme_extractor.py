@@ -3,8 +3,9 @@
 import hashlib
 import json
 import os
+import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
@@ -25,6 +26,7 @@ class Theme:
     image_path: str  # Path to generated image
     takeaways: list[str]
     created: datetime
+    author: str = ""
 
 
 @dataclass
@@ -44,6 +46,49 @@ def get_openai_client() -> Optional[OpenAI]:
     if not api_key:
         return None
     return OpenAI(api_key=api_key)
+
+
+def load_personas() -> dict:
+    """Load author personas from data/authors.json."""
+    authors_path = Path(__file__).parent.parent / "data" / "authors.json"
+    with open(authors_path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def select_persona(tags: list[str]) -> dict:
+    """Select the best author persona based on theme tags.
+
+    Scores each persona by tag overlap with the theme.
+    Falls back to the default persona if no tags match.
+
+    Args:
+        tags: List of theme tags
+
+    Returns:
+        Persona dict with name, specialty, voice, bio, tags
+    """
+    data = load_personas()
+    personas = data["personas"]
+    default_name = data.get("default", "Ellen Harper")
+
+    if not tags:
+        return next(p for p in personas if p["name"] == default_name)
+
+    tag_set = set(t.lower() for t in tags)
+    best_score = 0
+    best_persona = None
+
+    for persona in personas:
+        persona_tags = set(t.lower() for t in persona["tags"])
+        score = len(tag_set & persona_tags)
+        if score > best_score:
+            best_score = score
+            best_persona = persona
+
+    if best_persona is None:
+        return next(p for p in personas if p["name"] == default_name)
+
+    return best_persona
 
 
 def load_recent_articles(days: int = 7) -> list[ArticleData]:
@@ -121,16 +166,67 @@ def load_recent_articles(days: int = 7) -> list[ArticleData]:
     return articles
 
 
+def load_recent_themes(days: int = 7) -> list[str]:
+    """Load titles of recently generated themes from content/themes/.
+
+    Scans theme markdown files from the last N days and extracts titles
+    from frontmatter. Used to avoid repeating the same themes.
+
+    Args:
+        days: Number of days to look back
+
+    Returns:
+        List of recent theme titles
+    """
+    themes_dir = Path(__file__).parent.parent / "content" / "themes"
+    if not themes_dir.exists():
+        return []
+
+    cutoff = datetime.now() - timedelta(days=days)
+    titles = []
+
+    for md_file in themes_dir.glob("*.md"):
+        if md_file.name == "_index.md":
+            continue
+
+        # Quick date check from filename (format: YYYY-MM-DD-slug.md)
+        match = re.match(r"(\d{4}-\d{2}-\d{2})-", md_file.name)
+        if match:
+            try:
+                file_date = datetime.strptime(match.group(1), "%Y-%m-%d")
+                if file_date < cutoff:
+                    continue
+            except ValueError:
+                pass
+
+        try:
+            content = md_file.read_text(encoding="utf-8")
+            if content.startswith("---"):
+                parts = content.split("---", 2)
+                if len(parts) >= 3:
+                    for line in parts[1].strip().split("\n"):
+                        if line.startswith("title:"):
+                            title = line.split(":", 1)[1].strip().strip('"')
+                            if title:
+                                titles.append(title)
+                            break
+        except Exception:
+            continue
+
+    return titles
+
+
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=2, max=10)
 )
-def identify_themes(articles: list[ArticleData], min_articles: int = 3) -> list[dict]:
+def identify_themes(articles: list[ArticleData], min_articles: int = 3, recent_themes: Optional[list[str]] = None) -> list[dict]:
     """Use AI to identify themes across a set of articles.
 
     Args:
         articles: List of articles to analyze
         min_articles: Minimum articles needed to form a theme
+        recent_themes: Titles of recently covered themes to avoid repeating
 
     Returns:
         List of theme dicts with title, description, and article_indices
@@ -183,7 +279,14 @@ Rules:
 - Generate 2-5 themes based on content quality
 - Include a quality_score (1-10) for each theme
 - Only include themes with quality_score >= 6
-- Prefer themes that offer insights for fly anglers"""
+- Prefer themes that offer insights for fly anglers
+- Prefer SPECIFIC, novel angles over broad category themes. A theme about "winter midge tactics for tailwaters" is much better than "trout techniques". Combine topics in unexpected ways when possible.
+- Each theme title should be distinct and specific — avoid generic category names like "Gear Up" or "Conservation Challenges\""""
+                    + (f"""
+
+IMPORTANT: These themes were covered recently. Do NOT repeat them or suggest themes with similar titles, topics, or angles. Find fresh angles, underrepresented topics, or new combinations instead.
+Recently covered themes:
+""" + "\n".join(f'- "{t}"' for t in recent_themes) if recent_themes else "")
                 },
                 {
                     "role": "user",
@@ -213,13 +316,14 @@ Rules:
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=2, max=10)
 )
-def generate_theme_content(theme_title: str, theme_desc: str, articles: list[ArticleData]) -> dict:
+def generate_theme_content(theme_title: str, theme_desc: str, articles: list[ArticleData], persona: Optional[dict] = None) -> dict:
     """Generate editorial content for a theme.
 
     Args:
         theme_title: Title of the theme
         theme_desc: Brief description
         articles: Articles in this theme
+        persona: Author persona dict for voice styling
 
     Returns:
         Dict with editorial_intro, enhanced_title, and takeaways
@@ -238,21 +342,32 @@ def generate_theme_content(theme_title: str, theme_desc: str, articles: list[Art
         for a in articles
     )
 
+    # Build persona instructions
+    persona_block = ""
+    if persona:
+        persona_block = f"""
+You are writing as {persona['name']}, {persona['specialty']} columnist for Windknots.
+Voice: {persona['voice']}
+Bio: {persona['bio']}
+
+Write in {persona['name']}'s distinctive voice. Use first person (I, my) rather than first-person plural."""
+
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {
                     "role": "system",
-                    "content": """You are the editor of Windknots, a fishing content aggregator. Write editorial content
+                    "content": f"""You are a columnist for Windknots, a fishing content aggregator. Write editorial content
 that synthesizes insights from multiple articles on a theme.
+{persona_block}
 
 Return JSON with:
-{
+{{
   "enhanced_title": "Punchy, editorial headline for this theme roundup",
-  "editorial_intro": "2-3 paragraph editorial introduction that ties the articles together, offers insights, and gives anglers actionable takeaways. Write in first-person plural (we, our). Be conversational but authoritative.",
+  "editorial_intro": "2-4 paragraph editorial introduction that ties the articles together, offers insights, and gives anglers actionable takeaways. Vary the length naturally — some themes deserve more depth than others. Be conversational but authoritative.",
   "takeaways": ["Key takeaway 1", "Key takeaway 2", "Key takeaway 3"]
-}
+}}
 
 Style:
 - Write like a seasoned fishing editor, not a content mill
@@ -266,8 +381,8 @@ Style:
                     "content": f"Theme: {theme_title}\nDescription: {theme_desc}\n\nArticles:\n{article_details}"
                 }
             ],
-            max_tokens=600,
-            temperature=0.7,
+            max_tokens=800,
+            temperature=0.8,
             response_format={"type": "json_object"}
         )
 
@@ -314,13 +429,14 @@ def generate_theme_image(theme_title: str, theme_desc: str, tags: list[str]) -> 
                     "role": "system",
                     "content": """Create a DALL-E image prompt for a fishing article header image.
 The image should be:
-- Photorealistic or artistic illustration style
+- Realistic photograph, shot on a DSLR camera (e.g. Canon EOS R5 or Nikon D850)
+- Natural lighting, no filters, slight film grain
 - Evocative of the fishing theme
 - Suitable as a website header (landscape orientation)
-- No text or words in the image
-- Warm, inviting colors
+- No text, no words, no logos in the image
+- Natural, authentic colors — not oversaturated
 
-Return ONLY the prompt, nothing else. Keep it under 200 characters."""
+Return ONLY the prompt, nothing else. Keep it under 250 characters."""
                 },
                 {
                     "role": "user",
@@ -385,11 +501,17 @@ def create_theme_post(theme_data: dict, articles: list[ArticleData]) -> Theme:
     # Get articles for this theme
     theme_articles = [articles[i] for i in theme_data["article_indices"] if i < len(articles)]
 
+    # Select author persona based on tags
+    tags = theme_data.get("tags", [])
+    persona = select_persona(tags)
+    print(f"  Author: {persona['name']} ({persona['specialty']})")
+
     # Generate editorial content
     content = generate_theme_content(
         theme_data["title"],
         theme_data["description"],
-        theme_articles
+        theme_articles,
+        persona=persona
     )
 
     enhanced_title = content.get("enhanced_title", theme_data["title"])
@@ -399,7 +521,7 @@ def create_theme_post(theme_data: dict, articles: list[ArticleData]) -> Theme:
     image_path = generate_theme_image(
         enhanced_title,
         theme_data["description"],
-        theme_data.get("tags", [])
+        tags
     )
 
     # Create slug
@@ -413,10 +535,11 @@ def create_theme_post(theme_data: dict, articles: list[ArticleData]) -> Theme:
         description=theme_data["description"],
         editorial_intro=content.get("editorial_intro", theme_data["description"]),
         article_ids=[a.filename for a in theme_articles],
-        tags=theme_data.get("tags", []),
+        tags=tags,
         image_path=image_path,
         takeaways=content.get("takeaways", []),
-        created=datetime.now()
+        created=datetime.now(),
+        author=persona["name"]
     )
 
 
@@ -447,13 +570,16 @@ def save_theme_post(theme: Theme) -> Path:
     takeaways_yaml = "\n".join(f'  - "{t}"' for t in theme.takeaways) if theme.takeaways else ""
     takeaways_block = f"takeaways:\n{takeaways_yaml}\n" if takeaways_yaml else ""
 
+    # Author line
+    author_line = f'author: "{theme.author}"\n' if theme.author else ""
+
     markdown = f'''---
 title: "{theme.title}"
 date: {theme.created.strftime("%Y-%m-%dT%H:%M:%SZ")}
 type: "theme"
 description: "{theme.description}"
 image: "{theme.image_path}"
-tags:
+{author_line}tags:
 {tags_yaml}
 related_articles:
 {articles_yaml}
@@ -490,8 +616,12 @@ def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
         print("Not enough articles for theme extraction")
         return []
 
+    recent_themes = load_recent_themes(days=7)
+    if recent_themes:
+        print(f"Loaded {len(recent_themes)} recent theme titles to avoid repeats")
+
     print("Identifying themes with AI...")
-    themes = identify_themes(articles, min_articles)
+    themes = identify_themes(articles, min_articles, recent_themes=recent_themes)
     print(f"Found {len(themes)} potential themes")
 
     theme_data_list = []
@@ -501,11 +631,17 @@ def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
         # Get articles for this theme
         theme_articles = [articles[i] for i in theme_info["article_indices"] if i < len(articles)]
 
+        # Select author persona based on tags
+        tags = theme_info.get("tags", [])
+        persona = select_persona(tags)
+        print(f"  Author: {persona['name']} ({persona['specialty']})")
+
         # Generate editorial content
         content = generate_theme_content(
             theme_info["title"],
             theme_info["description"],
-            theme_articles
+            theme_articles,
+            persona=persona
         )
 
         enhanced_title = content.get("enhanced_title", theme_info["title"])
@@ -515,7 +651,7 @@ def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
         image_path = generate_theme_image(
             enhanced_title,
             theme_info["description"],
-            theme_info.get("tags", [])
+            tags
         )
 
         # Build article data for digest
@@ -540,10 +676,11 @@ def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
             description=theme_info["description"],
             editorial_intro=content.get("editorial_intro", theme_info["description"]),
             article_ids=[a.filename for a in theme_articles],
-            tags=theme_info.get("tags", []),
+            tags=tags,
             image_path=image_path,
             takeaways=content.get("takeaways", []),
-            created=datetime.now()
+            created=datetime.now(),
+            author=persona["name"]
         )
         saved_path = save_theme_post(theme_obj)
 
@@ -555,10 +692,11 @@ def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
             "description": theme_info["description"],
             "editorial_intro": content.get("editorial_intro", theme_info["description"]),
             "image": image_path,
-            "tags": theme_info.get("tags", []),
+            "tags": tags,
             "articles": article_data,
             "takeaways": content.get("takeaways", []),
-            "url": theme_url
+            "url": theme_url,
+            "author": persona["name"]
         })
 
         print(f"  -> Processed: {enhanced_title}")
@@ -583,8 +721,12 @@ def extract_and_save_themes(min_articles: int = 3) -> list[Path]:
         print("Not enough articles for theme extraction")
         return []
 
+    recent_themes = load_recent_themes(days=7)
+    if recent_themes:
+        print(f"Loaded {len(recent_themes)} recent theme titles to avoid repeats")
+
     print("Identifying themes with AI...")
-    themes = identify_themes(articles, min_articles)
+    themes = identify_themes(articles, min_articles, recent_themes=recent_themes)
     print(f"Found {len(themes)} potential themes")
 
     created_files = []
