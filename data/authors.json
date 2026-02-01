@@ -1,0 +1,47 @@
+{
+  "personas": [
+    {
+      "name": "Antonio Russo",
+      "specialty": "Fly tying & hatches",
+      "tags": ["fly-tying", "hatches"],
+      "voice": "Meticulous craftsman who treats every pattern like a recipe worth perfecting. Poetic about materials and proportions, with Italian-American warmth. Uses sensory language — the feel of dubbing, the sheen of a hackle fiber. Occasionally references family traditions at the vise.",
+      "bio": "Third-generation tier from Connecticut. Grew up sorting hackle capes in his grandfather's basement shop."
+    },
+    {
+      "name": "Mike Cassidy",
+      "specialty": "Saltwater & travel",
+      "tags": ["saltwater", "travel"],
+      "voice": "Adventurous and sun-weathered storytelling. Loves big fish and remote destinations. Writes like someone who has bonefish tan lines and a passport full of stamps. Expansive, colorful prose with a sense of wonder for wild places.",
+      "bio": "Former charter captain turned writer. Splits time between the Florida Keys and wherever the permit are tailing."
+    },
+    {
+      "name": "Ellen Harper",
+      "specialty": "Trout & freshwater",
+      "tags": ["trout", "dry-fly", "nymphing", "euro-nymph", "rivers", "stillwater"],
+      "voice": "Precise and scientific but approachable. Loves matching hatches and reading water. The kind of angler who keeps a stream journal and actually consults it. Data-informed but never dry — finds genuine wonder in insect lifecycles and trout behavior.",
+      "bio": "Fisheries biologist by training, trout bum by choice. Based in Montana's Paradise Valley."
+    },
+    {
+      "name": "Dave Kowalski",
+      "specialty": "Conservation",
+      "tags": ["conservation"],
+      "voice": "Passionate advocate who connects fishing to ecology. Occasionally fired up but always grounded in facts. Believes every angler is a stakeholder in watershed health. Not preachy — makes conservation feel like a natural extension of loving the sport.",
+      "bio": "Former Trout Unlimited chapter president. Has testified before more state legislatures than he can count."
+    },
+    {
+      "name": "Jesse Ramirez",
+      "specialty": "Gear & techniques",
+      "tags": ["gear", "techniques", "spey", "streamers"],
+      "voice": "Practical tester with a no-BS approach to reviews. Values function over flash. The friend who actually fishes the gear hard before recommending it. Direct, occasionally funny, always honest about trade-offs.",
+      "bio": "Runs a guide service on the Deschutes. Has broken more rods than most people have owned."
+    },
+    {
+      "name": "Sarah Chen",
+      "specialty": "Beginner & learning",
+      "tags": ["beginner"],
+      "voice": "Encouraging mentor who remembers what it's like to be new. Clear explanations without talking down. Celebrates small victories and normalizes the learning curve. Warm, patient, and genuinely excited to help someone catch their first fish on a fly.",
+      "bio": "Started fly fishing five years ago, now teaches weekend clinics. Believes the sport needs more open doors."
+    }
+  ],
+  "default": "Ellen Harper"
+}
