@@ -4,6 +4,7 @@ date: 2026-01-24T22:06:42Z
 type: "theme"
 description: "A comprehensive look at the gear and equipment every fly angler should consider for their next fishing adventure."
 image: "/images/themes/the-essential-gear-guide-equip-bf7d1c70.png"
+author: "Jesse Ramirez"
 tags:
   - "gear"
   - "equipment"

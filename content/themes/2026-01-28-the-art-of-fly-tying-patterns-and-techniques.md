@@ -4,6 +4,7 @@ date: 2026-01-28T13:29:48Z
 type: "theme"
 description: "Delve into the world of fly tying with tutorials and patterns that cater to both beginners and seasoned tiers."
 image: "/images/themes/mastering-the-vise-essential-f-47ede329.png"
+author: "Jesse Ramirez"
 tags:
   - "fly tying"
   - "techniques"

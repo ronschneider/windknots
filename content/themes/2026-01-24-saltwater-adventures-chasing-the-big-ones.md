@@ -4,6 +4,7 @@ date: 2026-01-24T22:05:52Z
 type: "theme"
 description: "Uncover the thrill of saltwater fly fishing, focusing on species like tarpon and the gear needed for success."
 image: "/images/themes/chasing-the-big-ones-a-saltwat-683629a3.png"
+author: "Jesse Ramirez"
 tags:
   - "saltwater"
   - "tarpon"

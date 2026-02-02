@@ -4,6 +4,7 @@ date: 2026-01-24T22:06:19Z
 type: "theme"
 description: "Stay informed on the latest conservation issues affecting freshwater ecosystems and the species that inhabit them."
 image: "/images/themes/protecting-our-waters-a-call-t-39c1e7cb.png"
+author: "Dave Kowalski"
 tags:
   - "conservation"
   - "freshwater"

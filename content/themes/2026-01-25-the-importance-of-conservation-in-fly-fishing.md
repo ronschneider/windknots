@@ -4,6 +4,7 @@ date: 2026-01-25T19:58:44Z
 type: "theme"
 description: "Understanding conservation issues is vital for preserving fish populations and ecosystems for future generations."
 image: "/images/themes/casting-for-tomorrow-the-cruci-33c4dca7.png"
+author: "Ellen Harper"
 tags:
   - "conservation"
   - "trout"

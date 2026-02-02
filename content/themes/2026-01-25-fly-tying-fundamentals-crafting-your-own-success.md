@@ -4,6 +4,7 @@ date: 2026-01-25T19:59:09Z
 type: "theme"
 description: "Dive into the world of fly tying with essential patterns and techniques that every angler should know."
 image: "/images/themes/mastering-fly-tying-the-essent-25a4f380.png"
+author: "Ellen Harper"
 tags:
   - "fly tying"
   - "techniques"

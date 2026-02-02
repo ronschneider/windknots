@@ -4,6 +4,7 @@ date: 2026-01-29T17:49:38Z
 type: "theme"
 description: "Exploring the pressing conservation issues affecting freshwater ecosystems and fish populations."
 image: "/images/themes/casting-for-change-navigating--3329e468.png"
+author: "Ellen Harper"
 tags:
   - "conservation"
   - "freshwater"

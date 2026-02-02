@@ -4,6 +4,7 @@ date: 2026-01-29T17:50:03Z
 type: "theme"
 description: "Seasonal strategies for targeting trout effectively throughout the year."
 image: "/images/themes/mastering-trout-seasonal-strat-e6dcb13b.png"
+author: "Ellen Harper"
 tags:
   - "trout"
   - "seasonal"

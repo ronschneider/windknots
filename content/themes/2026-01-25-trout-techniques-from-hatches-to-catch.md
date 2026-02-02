@@ -4,6 +4,7 @@ date: 2026-01-25T19:58:20Z
 type: "theme"
 description: "Explore various techniques and insights for successfully targeting trout throughout the year."
 image: "/images/themes/mastering-trout-techniques-fro-c4322781.png"
+author: "Antonio Russo"
 tags:
   - "trout"
   - "techniques"

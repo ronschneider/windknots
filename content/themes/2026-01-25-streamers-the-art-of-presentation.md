@@ -4,6 +4,7 @@ date: 2026-01-25T19:57:59Z
 type: "theme"
 description: "Mastering streamer techniques is essential for targeting big trout and enhancing your fly fishing experience."
 image: "/images/themes/mastering-streamers-unleashing-930b3f05.png"
+author: "Jesse Ramirez"
 tags:
   - "streamers"
   - "trout"

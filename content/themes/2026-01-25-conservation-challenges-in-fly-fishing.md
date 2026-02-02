@@ -4,6 +4,7 @@ date: 2026-01-25T07:48:24Z
 type: "theme"
 description: "Stay informed on the pressing conservation issues affecting our waters and fish populations."
 image: "/images/themes/the-fragile-ecosystem-conserva-768f4dc4.png"
+author: "Ellen Harper"
 tags:
   - "conservation"
   - "trout"

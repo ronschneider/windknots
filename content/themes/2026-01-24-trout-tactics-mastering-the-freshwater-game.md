@@ -4,6 +4,7 @@ date: 2026-01-24T22:05:00Z
 type: "theme"
 description: "Explore various strategies and techniques for targeting trout in freshwater environments, from stocked ponds to wild streams."
 image: "/images/themes/trout-tactics-mastering-the-ar-5cb90e4c.png"
+author: "Ellen Harper"
 tags:
   - "trout"
   - "freshwater"

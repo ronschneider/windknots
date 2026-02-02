@@ -4,6 +4,7 @@ date: 2026-01-29T17:48:46Z
 type: "theme"
 description: "Mastering streamer fishing hinges on presentation, a crucial technique for targeting trout effectively."
 image: "/images/themes/mastering-streamer-presentatio-235b1e57.png"
+author: "Jesse Ramirez"
 tags:
   - "streamers"
   - "trout"

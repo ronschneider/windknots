@@ -4,6 +4,7 @@ date: 2026-01-29T17:49:10Z
 type: "theme"
 description: "A collection of insights and patterns perfect for novice fly tiers to enhance their skills."
 image: "/images/themes/mastering-the-basics-essential-3fd14945.png"
+author: "Jesse Ramirez"
 tags:
   - "fly tying"
   - "techniques"

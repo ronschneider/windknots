@@ -4,6 +4,7 @@ date: 2026-01-25T07:47:56Z
 type: "theme"
 description: "Dive into the world of fly tying with patterns and techniques that every angler should know."
 image: "/images/themes/mastering-the-art-of-fly-tying-a401b8da.png"
+author: "Antonio Russo"
 tags:
   - "fly-tying"
   - "techniques"

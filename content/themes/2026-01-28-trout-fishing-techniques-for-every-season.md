@@ -4,6 +4,7 @@ date: 2026-01-28T13:31:01Z
 type: "theme"
 description: "Learn how to adapt your fishing strategies to match seasonal patterns and hatches for trout success."
 image: "/images/themes/mastering-trout-seasonal-techn-9062ffea.png"
+author: "Ellen Harper"
 tags:
   - "trout"
   - "seasonal"

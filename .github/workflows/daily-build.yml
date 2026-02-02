@@ -2,7 +2,7 @@ name: Daily Build
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # 6 AM UTC daily
+    - cron: '0 8 * * *'  # 1 AM MST (8 AM UTC) daily
   workflow_dispatch:      # Manual trigger
 
 jobs:
@@ -50,7 +50,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add content/ data/seen_urls.json static/images/themes/
+          git add content/ data/seen_urls.json data/featured_rotation.json static/images/themes/
           git commit -m "Daily content update: $(date +'%b %d, %Y')" || true
           git push origin master
 

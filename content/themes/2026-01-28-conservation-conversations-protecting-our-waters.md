@@ -4,6 +4,7 @@ date: 2026-01-28T13:30:15Z
 type: "theme"
 description: "Stay informed about the latest conservation issues affecting freshwater and saltwater fisheries."
 image: "/images/themes/conservation-conversations-saf-1db2d675.png"
+author: "Mike Cassidy"
 tags:
   - "conservation"
   - "freshwater"

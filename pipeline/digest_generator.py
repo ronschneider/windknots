@@ -1,14 +1,114 @@
 """Generate daily digest files combining themes and weblinks."""
 
 import argparse
+import json
 import os
 from datetime import datetime, date
 from pathlib import Path
 
 import yaml
 
-from .theme_extractor import extract_themes_data
+from .theme_extractor import classify_category, extract_themes_data
 from .weblinks_fetcher import fetch_all_weblinks
+
+# ---------------------------------------------------------------------------
+# Featured story rotation
+# ---------------------------------------------------------------------------
+
+ROTATION_PATH = Path(__file__).parent.parent / "data" / "featured_rotation.json"
+
+
+def load_rotation_state() -> dict:
+    """Load the featured-category rotation state from disk.
+
+    Returns:
+        Dict with 'last_category' (str) and 'history' (list of recent
+        featured categories, newest first).
+    """
+    if ROTATION_PATH.exists():
+        try:
+            with open(ROTATION_PATH, encoding="utf-8") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            pass
+    return {"last_category": "", "history": []}
+
+
+def save_rotation_state(state: dict) -> None:
+    """Persist the rotation state to disk.
+
+    Args:
+        state: Dict with 'last_category' and 'history'
+    """
+    ROTATION_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(ROTATION_PATH, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
+
+
+def pick_featured_theme(themes: list[dict]) -> list[dict]:
+    """Reorder themes so index 0 rotates categories day-to-day.
+
+    Rules:
+    - Never repeat the same category in featured position two days in a row
+    - Prefer categories that haven't been featured recently (least-recent-first)
+    - Among eligible themes, prefer higher quality_score
+    - Fallback: if all themes are same category, pick the best one anyway
+
+    Args:
+        themes: List of theme dicts (must have 'title' and 'tags')
+
+    Returns:
+        Reordered copy of themes with the featured theme at index 0
+    """
+    if not themes:
+        return themes
+
+    state = load_rotation_state()
+    last_cat = state.get("last_category", "")
+    history = state.get("history", [])
+
+    # Classify each theme
+    categorized = []
+    for t in themes:
+        cat = classify_category(t.get("title", ""), t.get("tags", []))
+        categorized.append((t, cat))
+
+    # Score each theme for featured eligibility
+    def featured_sort_key(item):
+        theme, cat = item
+        # Penalty if same as yesterday
+        same_as_last = 1 if cat == last_cat else 0
+        # How recently was this category featured? (lower = more recent = worse)
+        try:
+            recency = history.index(cat)
+        except ValueError:
+            recency = len(history) + 1  # never featured = best
+        quality = theme.get("quality_score", 5)
+        # Sort: first by not-same-as-last (0 before 1 inverted), then by
+        # least-recently-featured (higher recency first), then quality desc
+        return (same_as_last, -recency, -quality)
+
+    categorized.sort(key=featured_sort_key)
+
+    featured_theme, featured_cat = categorized[0]
+
+    # Rebuild the list: featured first, rest in original order
+    result = [featured_theme]
+    for t in themes:
+        if t is not featured_theme:
+            result.append(t)
+
+    # Update rotation state
+    new_history = [featured_cat] + [c for c in history if c != featured_cat]
+    new_history = new_history[:10]  # keep last 10
+    save_rotation_state({
+        "last_category": featured_cat,
+        "history": new_history,
+    })
+
+    print(f"  Featured category: {featured_cat} ('{featured_theme.get('title', '')}')")
+
+    return result
 
 
 def generate_daily_digest(
@@ -54,6 +154,11 @@ def generate_daily_digest(
         weblinks = fetch_all_weblinks()
     else:
         print("\n[2/2] Skipping weblinks (--skip-weblinks)")
+
+    # Rotate featured story
+    if themes:
+        print("\nRotating featured story...")
+        themes = pick_featured_theme(themes)
 
     # Build the digest content
     digest_data = build_digest_frontmatter(target_date, themes, weblinks)

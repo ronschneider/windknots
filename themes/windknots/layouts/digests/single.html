@@ -28,6 +28,9 @@
 
                 <div class="p-6">
                     <h3 class="font-display text-xl font-bold text-slate-800 mb-2">{{ .title }}</h3>
+                    {{ with .author }}
+                    <p class="text-sm text-slate-500 mb-2">By <span class="font-medium text-slate-700">{{ . }}</span></p>
+                    {{ end }}
 
                     {{ with .tags }}
                     <div class="flex flex-wrap gap-2 mb-4">

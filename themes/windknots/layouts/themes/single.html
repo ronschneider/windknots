@@ -14,6 +14,9 @@
         {{ end }}
       </div>
       <h1 class="font-display text-3xl md:text-4xl font-bold text-white leading-snug">{{ .Title }}</h1>
+      {{ with .Params.author }}
+      <p class="text-slate-300 text-sm mt-2">By <span class="text-white font-medium">{{ . }}</span></p>
+      {{ end }}
     </div>
   </div>
   {{ else }}
@@ -25,6 +28,9 @@
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
     </div>
     <h1 class="font-display text-4xl font-bold text-slate-900 mb-4">{{ .Title }}</h1>
+    {{ with .Params.author }}
+    <p class="text-slate-500 text-sm mb-2">By <span class="text-slate-700 font-medium">{{ . }}</span></p>
+    {{ end }}
     <div class="flex flex-wrap gap-2 mb-6">
       {{ range .Params.tags }}
       <a href="/tags/{{ . | urlize }}/" class="px-3 py-1 bg-copper-100 text-copper-700 rounded-full text-sm font-semibold hover:bg-copper-200 transition-colors">

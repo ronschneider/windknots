@@ -4,6 +4,7 @@ date: 2026-01-28T13:29:19Z
 type: "theme"
 description: "Explore the art of streamer fishing with insights on presentation and effective patterns to target big trout."
 image: "/images/themes/mastering-streamers-strategies-fd3cde20.png"
+author: "Jesse Ramirez"
 tags:
   - "streamers"
   - "trout"

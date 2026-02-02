@@ -4,6 +4,7 @@ date: 2026-01-25T19:59:37Z
 type: "theme"
 description: "Explore the latest gear and equipment that can enhance your fly fishing adventures."
 image: "/images/themes/gear-up-musthave-equipment-for-95d9f9ca.png"
+author: "Jesse Ramirez"
 tags:
   - "gear"
   - "equipment"

@@ -4,6 +4,7 @@ date: 2026-01-25T07:48:53Z
 type: "theme"
 description: "Discover the thrill of saltwater fly fishing and the unique techniques required for success."
 image: "/images/themes/mastering-the-flats-saltwater--a7ee739d.png"
+author: "Mike Cassidy"
 tags:
   - "saltwater"
   - "tarpon"

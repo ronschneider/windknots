@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import logging
 import os
 import re
 from dataclasses import dataclass
@@ -12,6 +13,106 @@ from typing import Optional
 import httpx
 from openai import OpenAI
 from tenacity import retry, stop_after_attempt, wait_exponential
+
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Theme deduplication constants
+# ---------------------------------------------------------------------------
+
+THEME_CATEGORIES = [
+    "species",
+    "technique",
+    "seasonal",
+    "fly-tying",
+    "gear",
+    "destination",
+    "conservation",
+    "beginner",
+]
+
+CATEGORY_KEYWORDS: dict[str, set[str]] = {
+    "species": {"trout", "steelhead", "salmon", "bass", "tarpon", "permit",
+                "bonefish", "carp", "pike", "musky", "redfish", "snook",
+                "brown", "rainbow", "brook", "cutthroat", "golden"},
+    "technique": {"nymph", "nymphing", "streamer", "streamers", "dry",
+                  "spey", "euro", "swing", "dead-drift", "indicator",
+                  "tightline", "casting", "presentation", "mend", "drift",
+                  "retrieve"},
+    "seasonal": {"winter", "spring", "summer", "fall", "autumn", "season",
+                 "hatch", "hatches", "runoff", "iceout", "spawn",
+                 "migration"},
+    "fly-tying": {"tying", "tie", "pattern", "patterns", "dubbing", "hackle",
+                  "thread", "hook", "vise", "materials", "recipe", "tutorial",
+                  "craft"},
+    "gear": {"rod", "rods", "reel", "reels", "line", "lines", "wader",
+             "waders", "net", "pack", "vest", "leader", "tippet",
+             "equipment", "gear", "review"},
+    "destination": {"travel", "destination", "trip", "lodge", "river",
+                    "creek", "flat", "flats", "backcountry", "zealand",
+                    "patagonia", "montana", "colorado", "alaska"},
+    "conservation": {"conservation", "habitat", "wild", "native",
+                     "restoration", "protection", "endangered", "watershed",
+                     "pollution", "dam", "hatchery", "release",
+                     "catch-and-release", "advocate"},
+    "beginner": {"beginner", "beginners", "basics", "introduction", "intro",
+                 "getting-started", "101", "learn", "learning", "starter",
+                 "first", "fundamental", "fundamentals", "guide"},
+}
+
+STOPWORDS = {
+    # Common English stop words
+    "a", "an", "the", "and", "or", "but", "in", "on", "of", "to", "for",
+    "with", "at", "by", "from", "up", "is", "it", "its", "s", "your",
+    "our", "how", "what", "when", "where", "why", "who", "vs",
+    # Editorial / marketing filler
+    "mastering", "master", "art", "essential", "essentials", "ultimate",
+    "complete", "guide", "best", "top", "great", "perfect", "expert",
+    "advanced", "pro", "tips", "tricks", "secrets", "every", "angler",
+    "anglers", "fishing", "fish", "fly", "new", "latest", "exploring",
+    "adventures", "adventure", "challenges", "challenge", "tactics",
+    "techniques", "strategies", "strategy", "roundup", "insights",
+    "navigating", "chasing", "pursuit", "quest", "saga", "story",
+    "stories", "unveiled", "unleashed", "beyond", "deep", "dive",
+    "corner", "watch", "report", "update",
+}
+
+
+def classify_category(title: str, tags: list[str]) -> str:
+    """Deterministic keyword-matching classifier for theme category.
+
+    Args:
+        title: Theme title
+        tags: Theme tags
+
+    Returns:
+        One of THEME_CATEGORIES, or "other"
+    """
+    words = set(re.findall(r"[a-z0-9]+", title.lower()))
+    tag_words = set(t.lower() for t in tags)
+    combined = words | tag_words
+
+    best_cat = "other"
+    best_score = 0
+    for cat, keywords in CATEGORY_KEYWORDS.items():
+        score = len(combined & keywords)
+        if score > best_score:
+            best_score = score
+            best_cat = cat
+    return best_cat
+
+
+def extract_topic_keywords(title: str) -> set[str]:
+    """Strip stopwords and return significant topic words from a title.
+
+    Args:
+        title: Theme title string
+
+    Returns:
+        Set of significant lowercase keyword strings
+    """
+    words = set(re.findall(r"[a-z0-9]+", title.lower()))
+    return words - STOPWORDS
 
 
 @dataclass
@@ -166,34 +267,37 @@ def load_recent_articles(days: int = 7) -> list[ArticleData]:
     return articles
 
 
-def load_recent_themes(days: int = 7) -> list[str]:
-    """Load titles of recently generated themes from content/themes/.
+def load_recent_themes(days: int = 7) -> list[dict]:
+    """Load recently generated themes from content/themes/.
 
-    Scans theme markdown files from the last N days and extracts titles
-    from frontmatter. Used to avoid repeating the same themes.
+    Scans theme markdown files from the last N days and extracts titles,
+    tags, date, and category from frontmatter. Used to avoid repeating
+    the same themes and for featured-story rotation.
 
     Args:
         days: Number of days to look back
 
     Returns:
-        List of recent theme titles
+        List of dicts with keys: title, tags, date, category
     """
     themes_dir = Path(__file__).parent.parent / "content" / "themes"
     if not themes_dir.exists():
         return []
 
     cutoff = datetime.now() - timedelta(days=days)
-    titles = []
+    results = []
 
     for md_file in themes_dir.glob("*.md"):
         if md_file.name == "_index.md":
             continue
 
         # Quick date check from filename (format: YYYY-MM-DD-slug.md)
+        file_date_str = None
         match = re.match(r"(\d{4}-\d{2}-\d{2})-", md_file.name)
         if match:
+            file_date_str = match.group(1)
             try:
-                file_date = datetime.strptime(match.group(1), "%Y-%m-%d")
+                file_date = datetime.strptime(file_date_str, "%Y-%m-%d")
                 if file_date < cutoff:
                     continue
             except ValueError:
@@ -204,29 +308,46 @@ def load_recent_themes(days: int = 7) -> list[str]:
             if content.startswith("---"):
                 parts = content.split("---", 2)
                 if len(parts) >= 3:
+                    title = ""
+                    tags = []
+                    in_tags = False
                     for line in parts[1].strip().split("\n"):
                         if line.startswith("title:"):
                             title = line.split(":", 1)[1].strip().strip('"')
-                            if title:
-                                titles.append(title)
-                            break
+                            in_tags = False
+                        elif line.startswith("tags:"):
+                            in_tags = True
+                        elif in_tags and line.strip().startswith("- "):
+                            tag = line.strip()[2:].strip().strip('"')
+                            if tag:
+                                tags.append(tag)
+                        elif not line.startswith(" ") and not line.startswith("-"):
+                            in_tags = False
+
+                    if title:
+                        results.append({
+                            "title": title,
+                            "tags": tags,
+                            "date": file_date_str or "",
+                            "category": classify_category(title, tags),
+                        })
         except Exception:
             continue
 
-    return titles
+    return results
 
 
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=2, max=10)
 )
-def identify_themes(articles: list[ArticleData], min_articles: int = 3, recent_themes: Optional[list[str]] = None) -> list[dict]:
+def identify_themes(articles: list[ArticleData], min_articles: int = 3, recent_themes: Optional[list[dict]] = None) -> list[dict]:
     """Use AI to identify themes across a set of articles.
 
     Args:
         articles: List of articles to analyze
         min_articles: Minimum articles needed to form a theme
-        recent_themes: Titles of recently covered themes to avoid repeating
+        recent_themes: List of dicts with title/tags/date/category for recent themes
 
     Returns:
         List of theme dicts with title, description, and article_indices
@@ -241,6 +362,25 @@ def identify_themes(articles: list[ArticleData], min_articles: int = 3, recent_t
         f"{i}. [{a.source_name}] {a.title}\n   Tags: {', '.join(a.tags)}\n   Summary: {a.summary[:150]}..."
         for i, a in enumerate(articles)
     )
+
+    # Build dedup context from recent themes
+    dedup_block = ""
+    if recent_themes:
+        recent_titles = [t["title"] for t in recent_themes]
+        blocked_keywords: set[str] = set()
+        for t in recent_themes:
+            blocked_keywords |= extract_topic_keywords(t["title"])
+        # Remove very common words that would over-block
+        blocked_keywords -= {"the", "a", "an", "and", "or", "for", "in", "on", "of", "to", "with"}
+        dedup_block = f"""
+
+IMPORTANT: These themes were covered recently. Do NOT repeat them or suggest themes with similar titles, topics, or angles. Find fresh angles, underrepresented topics, or new combinations instead.
+Recently covered themes:
+""" + "\n".join(f'- "{t}"' for t in recent_titles) + f"""
+
+BLOCKED topic keywords (do NOT build themes around these words):
+{', '.join(sorted(blocked_keywords))}
+"""
 
     try:
         response = client.chat.completions.create(
@@ -282,11 +422,7 @@ Rules:
 - Prefer themes that offer insights for fly anglers
 - Prefer SPECIFIC, novel angles over broad category themes. A theme about "winter midge tactics for tailwaters" is much better than "trout techniques". Combine topics in unexpected ways when possible.
 - Each theme title should be distinct and specific — avoid generic category names like "Gear Up" or "Conservation Challenges\""""
-                    + (f"""
-
-IMPORTANT: These themes were covered recently. Do NOT repeat them or suggest themes with similar titles, topics, or angles. Find fresh angles, underrepresented topics, or new combinations instead.
-Recently covered themes:
-""" + "\n".join(f'- "{t}"' for t in recent_themes) if recent_themes else "")
+                    + dedup_block
                 },
                 {
                     "role": "user",
@@ -310,6 +446,53 @@ Recently covered themes:
     except Exception as e:
         print(f"Error identifying themes: {e}")
         return []
+
+
+def filter_duplicate_themes(
+    new_themes: list[dict],
+    recent_themes: list[dict],
+    max_shared_keywords: int = 1,
+) -> list[dict]:
+    """Post-generation fuzzy filter: reject themes that overlap recent ones.
+
+    Args:
+        new_themes: Themes just returned by AI
+        recent_themes: Recent theme dicts (with 'title' key)
+        max_shared_keywords: Maximum shared topic keywords allowed
+
+    Returns:
+        Filtered list of themes
+    """
+    if not recent_themes:
+        return new_themes
+
+    recent_keyword_sets = [
+        extract_topic_keywords(t["title"]) for t in recent_themes
+    ]
+
+    kept = []
+    for theme in new_themes:
+        new_kw = extract_topic_keywords(theme["title"])
+        duplicate = False
+        for i, old_kw in enumerate(recent_keyword_sets):
+            shared = new_kw & old_kw
+            if len(shared) > max_shared_keywords:
+                logger.info(
+                    "Rejected duplicate theme %r — shares keywords %s with %r",
+                    theme["title"],
+                    shared,
+                    recent_themes[i]["title"],
+                )
+                print(
+                    f"  [dedup] Rejected '{theme['title']}' — overlaps with "
+                    f"'{recent_themes[i]['title']}' (shared: {shared})"
+                )
+                duplicate = True
+                break
+        if not duplicate:
+            kept.append(theme)
+
+    return kept
 
 
 @retry(
@@ -624,6 +807,13 @@ def extract_themes_data(min_articles: int = 3, days: int = 14) -> list[dict]:
     themes = identify_themes(articles, min_articles, recent_themes=recent_themes)
     print(f"Found {len(themes)} potential themes")
 
+    # Post-generation fuzzy dedup
+    if recent_themes:
+        before = len(themes)
+        themes = filter_duplicate_themes(themes, recent_themes)
+        if len(themes) < before:
+            print(f"Filtered to {len(themes)} themes after dedup")
+
     theme_data_list = []
     for theme_info in themes:
         print(f"\nProcessing theme: {theme_info['title']}")
@@ -728,6 +918,13 @@ def extract_and_save_themes(min_articles: int = 3) -> list[Path]:
     print("Identifying themes with AI...")
     themes = identify_themes(articles, min_articles, recent_themes=recent_themes)
     print(f"Found {len(themes)} potential themes")
+
+    # Post-generation fuzzy dedup
+    if recent_themes:
+        before = len(themes)
+        themes = filter_duplicate_themes(themes, recent_themes)
+        if len(themes) < before:
+            print(f"Filtered to {len(themes)} themes after dedup")
 
     created_files = []
     for theme_data in themes:

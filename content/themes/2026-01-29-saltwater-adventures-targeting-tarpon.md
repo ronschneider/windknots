@@ -4,6 +4,7 @@ date: 2026-01-29T17:50:27Z
 type: "theme"
 description: "Insights and experiences from fly fishing for tarpon in saltwater environments."
 image: "/images/themes/chasing-silver-kings-our-guide-ede809fe.png"
+author: "Mike Cassidy"
 tags:
   - "saltwater"
   - "tarpon"

@@ -4,6 +4,7 @@ date: 2026-01-25T07:49:21Z
 type: "theme"
 description: "Get insights on the latest gear and equipment that can enhance your fly fishing experience."
 image: "/images/themes/gear-up-elevate-your-fly-fishi-223d6f7d.png"
+author: "Jesse Ramirez"
 tags:
   - "gear"
   - "fly-fishing"

@@ -4,6 +4,7 @@ date: 2026-01-28T13:30:38Z
 type: "theme"
 description: "A comprehensive look at the must-have gear for every fly angler, from rods to reels and everything in between."
 image: "/images/themes/essential-fly-fishing-gear-the-85b2c15f.png"
+author: "Jesse Ramirez"
 tags:
   - "gear"
   - "equipment"

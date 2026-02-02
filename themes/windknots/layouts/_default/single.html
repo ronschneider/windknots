@@ -22,8 +22,8 @@
 
     <!-- Meta -->
     <div class="flex items-center text-slate-400 text-sm mb-8">
-        <span>From {{ .Params.source_name }}</span>
-        <span class="mx-2">|</span>
+        {{ with .Params.author }}<span>By <span class="text-slate-600 font-medium">{{ . }}</span></span><span class="mx-2">|</span>{{ end }}
+        {{ with .Params.source_name }}<span>From {{ . }}</span><span class="mx-2">|</span>{{ end }}
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
     </div>
 

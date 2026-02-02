@@ -4,6 +4,7 @@ date: 2026-01-24T22:05:26Z
 type: "theme"
 description: "Delve into the art of fly tying with tutorials and patterns that cater to both beginners and experienced tiers."
 image: "/images/themes/mastering-fly-tying-build-your-9ebaa0f9.png"
+author: "Jesse Ramirez"
 tags:
   - "fly tying"
   - "techniques"
