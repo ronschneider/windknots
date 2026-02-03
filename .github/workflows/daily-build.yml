@@ -50,7 +50,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add content/ data/seen_urls.json data/featured_rotation.json static/images/themes/
+          git add content/ data/seen_urls.json static/images/themes/
+          [ -f data/featured_rotation.json ] && git add data/featured_rotation.json || true
           git commit -m "Daily content update: $(date +'%b %d, %Y')" || true
           git push origin master
 
