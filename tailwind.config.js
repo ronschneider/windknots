@@ -2,7 +2,21 @@
 module.exports = {
   content: [
     "./themes/windknots/layouts/**/*.html",
+    "./themes/windknots/static/js/**/*.js",
     "./content/**/*.md",
+  ],
+  safelist: [
+    // Rivers widget flow grade colors
+    'bg-red-600',
+    'bg-orange-500',
+    'bg-green-600',
+    'bg-blue-500',
+    'bg-purple-600',
+    'text-red-600',
+    'text-orange-500',
+    'text-green-600',
+    'text-blue-500',
+    'text-purple-600',
   ],
   theme: {
     extend: {

@@ -1,0 +1,31 @@
+{{/* Nearby Rivers Widget - Real-time stream flow dashboard */}}
+{{/* Tailwind safelist classes for JS rendering: bg-river-500 hover:bg-river-600 bg-copper-700 w-14 w-20 text-right */}}
+<div id="rivers-widget" class="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+    <div class="flex justify-between items-center mb-3">
+        <h3 class="font-display text-lg font-semibold text-slate-800">Nearby Rivers</h3>
+        <button id="edit-location" class="text-sm text-copper-600 hover:text-copper-700 transition-colors flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span id="location-name">Loading...</span>
+        </button>
+    </div>
+
+    <div id="rivers-list">
+        {{/* Content rendered by JavaScript */}}
+        <div class="flex items-center justify-center py-8 text-slate-400">
+            <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-sm">Finding rivers...</span>
+        </div>
+    </div>
+
+    <div class="mt-3 pt-3 border-t border-slate-100">
+        <p class="text-xs text-slate-400">
+            Data from <a href="https://waterservices.usgs.gov/" target="_blank" rel="noopener" class="text-river-500 hover:text-river-700">USGS Water Services</a>
+        </p>
+    </div>
+</div>

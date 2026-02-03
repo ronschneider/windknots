@@ -69,6 +69,13 @@
         aspect-ratio: 16 / 9;
     }
 
+    /* Rivers widget flow grade colors (for dynamic JS rendering) */
+    .flow-grade-very-low { @apply bg-red-600 text-white; }
+    .flow-grade-low { @apply bg-orange-500 text-white; }
+    .flow-grade-normal { @apply bg-green-600 text-white; }
+    .flow-grade-high { @apply bg-blue-500 text-white; }
+    .flow-grade-blown-out { @apply bg-purple-600 text-white; }
+
     /* Hide scrollbar but allow scrolling */
     .scrollbar-hide {
         -ms-overflow-style: none;
