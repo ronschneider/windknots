@@ -27,13 +27,6 @@
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
     </div>
 
-    <!-- Image -->
-    {{ if .Params.image }}
-    <div class="aspect-video rounded-lg overflow-hidden mb-8">
-        <img src="{{ .Params.image }}" alt="{{ .Title }}" class="w-full h-full object-cover">
-    </div>
-    {{ end }}
-
     <!-- Content -->
     <div class="prose prose-lg max-w-none">
         {{ .Content }}
