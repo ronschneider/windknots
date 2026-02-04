@@ -1,0 +1,52 @@
+{{/* Local Waters Widget - Stream conditions + fishing reports */}}
+{{/* Tailwind safelist: bg-river-500 hover:bg-river-600 bg-copper-600 hover:bg-copper-700 bg-red-100 text-red-700 bg-green-100 text-green-700 bg-blue-100 text-blue-700 line-clamp-2 */}}
+<div id="local-waters-widget" class="bg-white rounded-lg shadow-sm border border-slate-200">
+    {{/* Header with location */}}
+    <div class="flex justify-between items-center p-4 border-b border-slate-100">
+        <h3 class="font-display text-lg font-semibold text-slate-800">Local Waters</h3>
+        <button id="edit-location" class="text-xs text-copper-600 hover:text-copper-700 transition-colors flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span id="location-name">Loading...</span>
+        </button>
+    </div>
+
+    {{/* Stream Conditions Section */}}
+    <div class="p-4 border-b border-slate-100">
+        <h4 class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Stream Conditions</h4>
+        <div id="flow-list">
+            <div class="flex items-center justify-center py-4 text-slate-400">
+                <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-xs">Loading...</span>
+            </div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2">
+            Data from <a href="https://waterservices.usgs.gov/" target="_blank" rel="noopener" class="text-river-500 hover:text-river-700">USGS</a>
+        </p>
+    </div>
+
+    {{/* Fishing Reports Section */}}
+    <div class="p-4">
+        <div class="flex justify-between items-center mb-2">
+            <h4 class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Fishing Reports</h4>
+            <a href="https://fishingreports.orvis.com/" target="_blank" rel="noopener"
+               class="text-[10px] text-copper-600 hover:text-copper-700 transition-colors">
+                All reports &rarr;
+            </a>
+        </div>
+        <div id="reports-list">
+            <div class="flex items-center justify-center py-4 text-slate-400">
+                <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-xs">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
