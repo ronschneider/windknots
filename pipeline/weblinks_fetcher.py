@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
+import feedparser
 import httpx
 from bs4 import BeautifulSoup
 
@@ -66,6 +67,8 @@ def load_sources() -> dict:
 def fetch_reddit_discussions(limit: int = 10) -> list[RedditDiscussion]:
     """Fetch hot self-posts (discussions) from fly fishing subreddits.
 
+    Uses RSS feeds since Reddit's JSON API now blocks unauthenticated requests.
+
     Args:
         limit: Maximum number of discussions to return
 
@@ -79,46 +82,42 @@ def fetch_reddit_discussions(limit: int = 10) -> list[RedditDiscussion]:
         return []
 
     discussions = []
-    headers = {
-        "User-Agent": "Windknots/1.0 (fishing content aggregator)"
-    }
-
     subreddits = reddit_config.get("subreddits", ["flyfishing", "flytying"])
 
     for subreddit in subreddits:
         try:
-            with httpx.Client(timeout=30, headers=headers) as client:
-                url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-                response = client.get(url, params={"limit": 25})
-                response.raise_for_status()
-                data = response.json()
+            feed = feedparser.parse(
+                f"https://www.reddit.com/r/{subreddit}/hot.rss?limit=25"
+            )
 
-                for post in data.get("data", {}).get("children", []):
-                    post_data = post.get("data", {})
+            for entry in feed.entries:
+                # Detect self-posts by checking for text content in div.md
+                html = entry.content[0].value if hasattr(entry, "content") else ""
+                soup = BeautifulSoup(html, "html.parser")
+                md_div = soup.select_one("div.md")
+                is_self = bool(md_div and len(md_div.get_text(strip=True)) > 20)
 
-                    # Only include self-posts (discussions)
-                    if not post_data.get("is_self") or post_data.get("stickied"):
-                        continue
+                if not is_self:
+                    continue
 
-                    # Skip low-engagement posts
-                    if post_data.get("score", 0) < 10:
-                        continue
+                # Skip stickied/mod posts
+                title = entry.title
+                if title.startswith("[MOD POST"):
+                    continue
 
-                    discussions.append(RedditDiscussion(
-                        title=post_data.get("title", ""),
-                        url=f"https://reddit.com{post_data.get('permalink', '')}",
-                        subreddit=f"r/{subreddit}",
-                        upvotes=post_data.get("score", 0),
-                        comment_count=post_data.get("num_comments", 0),
-                        author=post_data.get("author", "")
-                    ))
+                discussions.append(RedditDiscussion(
+                    title=title,
+                    url=entry.link,
+                    subreddit=f"r/{subreddit}",
+                    upvotes=0,
+                    comment_count=0,
+                    author=getattr(entry, "author", "").replace("/u/", ""),
+                ))
 
         except Exception as e:
             print(f"Error fetching r/{subreddit} discussions: {e}")
             continue
 
-    # Sort by upvotes and limit
-    discussions.sort(key=lambda d: d.upvotes, reverse=True)
     return discussions[:limit]
 
 

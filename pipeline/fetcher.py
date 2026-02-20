@@ -10,6 +10,7 @@ from typing import Optional
 
 import feedparser
 import httpx
+from bs4 import BeautifulSoup
 from dateutil import parser as date_parser
 
 
@@ -228,50 +229,58 @@ def fetch_newsapi(sources: dict) -> list[Article]:
 
 
 def fetch_reddit(sources: dict) -> list[Article]:
-    """Fetch posts from Reddit (using public JSON API)."""
+    """Fetch posts from Reddit via RSS feeds.
+
+    Uses RSS since Reddit's JSON API now blocks unauthenticated requests.
+    """
     reddit_config = sources.get("reddit", {})
     if not reddit_config.get("enabled", False):
         return []
 
     articles = []
-
-    headers = {
-        "User-Agent": "Windknots/1.0 (fishing content aggregator)"
-    }
+    sort = reddit_config.get("sort", "hot")
+    limit = reddit_config.get("limit", 10)
 
     for subreddit in reddit_config.get("subreddits", []):
         try:
-            with httpx.Client(timeout=30, headers=headers) as client:
-                url = f"https://www.reddit.com/r/{subreddit}/{reddit_config.get('sort', 'hot')}.json"
-                response = client.get(url, params={"limit": reddit_config.get("limit", 10)})
-                response.raise_for_status()
-                data = response.json()
+            feed = feedparser.parse(
+                f"https://www.reddit.com/r/{subreddit}/{sort}.rss?limit={limit}"
+            )
 
-                for post in data.get("data", {}).get("children", []):
-                    post_data = post.get("data", {})
+            for entry in feed.entries:
+                # Skip stickied/mod posts
+                if entry.title.startswith("[MOD POST"):
+                    continue
 
-                    # Skip non-link posts or stickied posts
-                    if post_data.get("stickied") or post_data.get("is_self"):
-                        continue
+                # Parse published date
+                published = datetime.now()
+                if hasattr(entry, "published_parsed") and entry.published_parsed:
+                    published = datetime(*entry.published_parsed[:6])
 
-                    published = datetime.fromtimestamp(post_data.get("created_utc", 0))
+                # Extract image URL from HTML content
+                image_url = None
+                html = entry.content[0].value if hasattr(entry, "content") else ""
+                if html:
+                    soup = BeautifulSoup(html, "html.parser")
+                    img = soup.select_one("img")
+                    if img and img.get("src"):
+                        image_url = img["src"]
 
-                    # Get image/thumbnail
-                    image_url = None
-                    if post_data.get("thumbnail") and post_data["thumbnail"].startswith("http"):
-                        image_url = post_data["thumbnail"]
-                    if post_data.get("url", "").endswith((".jpg", ".png", ".gif")):
-                        image_url = post_data["url"]
+                    # Extract text description from self-posts
+                    md_div = soup.select_one("div.md")
+                    description = md_div.get_text(strip=True)[:500] if md_div else ""
+                else:
+                    description = ""
 
-                    articles.append(Article(
-                        title=post_data.get("title", ""),
-                        url=post_data.get("url", ""),
-                        source_name=f"Reddit r/{subreddit}",
-                        published=published,
-                        description=post_data.get("selftext", "")[:500] if post_data.get("selftext") else "",
-                        image_url=image_url,
-                        author=post_data.get("author")
-                    ))
+                articles.append(Article(
+                    title=entry.title,
+                    url=entry.link,
+                    source_name=f"Reddit r/{subreddit}",
+                    published=published,
+                    description=description,
+                    image_url=image_url,
+                    author=getattr(entry, "author", "").replace("/u/", "") or None,
+                ))
 
         except Exception as e:
             print(f"Error fetching r/{subreddit}: {e}")

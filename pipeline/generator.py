@@ -210,17 +210,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.digest:
-        from datetime import date
-        target_date = None
-        if args.digest_date:
-            try:
-                target_date = date.fromisoformat(args.digest_date)
-            except ValueError:
-                print(f"Invalid date format: {args.digest_date}. Use YYYY-MM-DD.")
-                exit(1)
-        generate_daily_digest(target_date=target_date)
-    elif args.themes_only:
+    if args.themes_only:
         print("=" * 60)
         print("Windknots Theme Extraction")
         print("=" * 60)
@@ -230,4 +220,17 @@ if __name__ == "__main__":
         else:
             print("Theme extraction requires OPENAI_API_KEY")
     else:
+        # Always fetch and process new articles first
         run_pipeline(extract_themes=args.themes, max_articles=args.max_articles)
+
+        # Then generate digest if requested
+        if args.digest:
+            from datetime import date
+            target_date = None
+            if args.digest_date:
+                try:
+                    target_date = date.fromisoformat(args.digest_date)
+                except ValueError:
+                    print(f"Invalid date format: {args.digest_date}. Use YYYY-MM-DD.")
+                    exit(1)
+            generate_daily_digest(target_date=target_date)
